@@ -13,7 +13,7 @@ import {combineData} from '../../../utils/DataHelper';
 import {AuthContext} from '../../../context';
 import {getScreenParent} from '../../../utils/NavigationHelper';
 import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export function CreateProject({}) {
   const {state, dispatch} = useContext(AuthContext);
@@ -52,6 +52,20 @@ export function CreateProject({}) {
     handleNavigation('LocationPicker')
 
   }
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    console.warn("A date has been picked: ", date);
+    hideDatePicker();
+  };
   const handleBottomModal = bottomModal => {
     console.log("🚀 ~ file: index.js:32 ~ handleBottomModal ~ bottomModal:", bottomModal)
     dispatch({
@@ -108,11 +122,11 @@ export function CreateProject({}) {
         style={styles.textInput}
         onChangeText={text => handleSetValue('description', text)}
       />
-       <TextInput
-        placeholder="Date and Time"
-        placeholderTextColor="gray"
-        style={styles.textInput}
-        onChangeText={text => handleSetValue('Date and Time', text)}
+        <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
       />
       <View style={styles.teamTextWrapper}>
         <Text style={styles.teamText}>Select Members</Text>
@@ -149,7 +163,7 @@ export function CreateProject({}) {
       <TouchableOpacity  onPress={() => handleLocation('')} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Select Location</Text>
       </TouchableOpacity>
-      <TouchableOpacity  onPress={() => showDatepicker('')} style={styles.btnWrapper}>
+      <TouchableOpacity  onPress={() => showDatePicker()} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Pick date</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={()=> handleBottomModal('')} style={styles.btnWrapper}>

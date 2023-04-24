@@ -6154,6 +6154,13 @@
   dependencies:
     "@types/geojson" "^7946.0.10"
 
+"react-native-modal-datetime-picker@^15.0.0":
+  "integrity" "sha512-cHeFEYHUhyIk+Mt9C6RVseg/VMGR4XcxdU9SibF5RMCXiXhrwMkFy7203xg1S331pzCF/Oqhvi4Jh0pYMrTFtQ=="
+  "resolved" "https://registry.npmjs.org/react-native-modal-datetime-picker/-/react-native-modal-datetime-picker-15.0.0.tgz"
+  "version" "15.0.0"
+  dependencies:
+    "prop-types" "^15.7.2"
+
 "react-native-paper@^4.9.2":
   "integrity" "sha512-gdUtJJf0bw/0xoCE1jR6qCQiQCQZ9ivZh0lbPghFFaGxX88WtTQpusnGON8WhLPeH5odEQ4dTBu99lnIQvSFow=="
   "resolved" "https://registry.npmjs.org/react-native-paper/-/react-native-paper-4.12.5.tgz"
