@@ -13,7 +13,7 @@ import {combineData} from '../../../utils/DataHelper';
 import {AuthContext} from '../../../context';
 import {getScreenParent} from '../../../utils/NavigationHelper';
 import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export function CreateProject({}) {
   const {state, dispatch} = useContext(AuthContext);
@@ -21,6 +21,28 @@ export function CreateProject({}) {
   const [data, setData] = useState({
     newProject: {title: '', description: '', selectedMembers: []},
   });
+  const [date, setDate] = useState(new Date(1598051730000));
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    DateTimePicker.open({
+      value: date,
+      onChange,
+      mode: currentMode,
+      is24Hour: true,
+    });
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
@@ -126,6 +148,9 @@ export function CreateProject({}) {
       </View>
       <TouchableOpacity  onPress={() => handleLocation('')} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Select Location</Text>
+      </TouchableOpacity>
+      <TouchableOpacity  onPress={() => showDatepicker('')} style={styles.btnWrapper}>
+        <Text style={styles.btnText}>Pick date</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={()=> handleBottomModal('')} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Send</Text>

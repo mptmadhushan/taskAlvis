@@ -1,73 +1,104 @@
-import React, {useContext, useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
-  ScrollView,
-  Image,
+  SafeAreaView,
+  FlatList,
 } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import shortid from 'shortid';
-import styles from './membersStyle';
-import appTheme from '../../constants/colors';
-import {TabScreenHeader, EmptyListComponent} from '../../components';
+import styles from './projectsStyle';
 import {AuthContext} from '../../context';
-import {navigateToNestedRoute} from '../../navigators/RootNavigation';
-import {getScreenParent} from '../../utils/NavigationHelper';
+import {
+  TabScreenHeader,
+  ProjectCard,
+  EmptyListComponent,
+} from '../../components';
+import {combineData} from '../../utils/DataHelper';
 
-export function Members() {
+export function Members({navigation}) {
+  const tabs = ['All', 'Ongoing', 'Completed'];
+
   const {state, dispatch} = useContext(AuthContext);
-  const {members} = state;
+  const {projects} = state;
 
-  const handleNavigation = (screen, params) => {
-    navigateToNestedRoute(getScreenParent(screen), screen, params);
+  const [data, setData] = useState({activeTab: 'All'});
+
+  const toggleTab = tab => {
+    setData(combineData(data, {activeTab: tab}));
+  };
+
+  const isActiveTab = tab => {
+    const value = data?.activeTab === tab;
+    return value;
+  };
+
+  const getProjects = () => {
+    let {activeTab} = data;
+    let projectsToRender = [];
+    if (activeTab === 'All') {
+      projectsToRender = projects;
+    } else {
+      projectsToRender =
+        projects?.filter(
+          project => project.status === activeTab?.toLowerCase(),
+        ) || [];
+    }
+
+    return projectsToRender;
+  };
+
+  const renderProjectInfo = ({item}) => {
+    return (
+      <ProjectCard
+        project={item}
+        key={shortid.generate()}
+        navigation={navigation}
+      />
+    );
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
-        leftComponent={() => <Text style={styles.headerTitle}>Members</Text>}
-        isSearchBtnVisible={false}
+        leftComponent={() => <Text style={styles.headerTitle}>Repeative Task</Text>}
+        isSearchBtnVisible={true}
         isMoreBtnVisible={true}
       />
-      {members?.length ? (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.membersWrapper}>
-            {members.map(member => (
-              <TouchableOpacity
-                style={styles.singleMember}
-                onPress={() => handleNavigation('Chat', member)}
-                key={shortid.generate()}>
-                <Image
-                  style={styles.singleMemberPhoto}
-                  source={{
-                    uri: member?.photo,
-                  }}
-                />
-                <View style={styles.singleMemberInfo}>
-                  <Text
-                    style={styles.selectedMemberName}
-                    numberOfLines={1}
-                    ellipsizeMode="tail">
-                    {member?.name}
-                  </Text>
-                  <Text style={styles.selectedMemberLastSeen}>
-                    {member?.designation}
-                  </Text>
-                </View>
-                <MaterialCommunityIcons
-                  name="message"
-                  size={17}
-                  color={appTheme.PRIMARY_COLOR}
-                />
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
-      ) : (
-        <EmptyListComponent />
-      )}
+      <View style={styles.projectsBody}>
+        {/* <View style={styles.projectsTabs}>
+          {tabs?.map(tab => (
+            <TouchableOpacity
+              style={[
+                styles.projectTab,
+                isActiveTab(tab) ? styles.activeProjectTab : null,
+              ]}
+              onPress={() => toggleTab(tab)}
+              key={shortid.generate()}>
+              <Text
+                style={[
+                  styles.projectTabText,
+                  isActiveTab(tab)
+                    ? styles.activeProjectTabText
+                    : styles.inActiveProjectTabText,
+                ]}>
+                {tab}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View> */}
+        {projects?.length > 0 ? (
+          <FlatList
+            data={getProjects()}
+            keyExtractor={(item, index) => shortid.generate()}
+            renderItem={renderProjectInfo}
+            horizontal={false}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          <EmptyListComponent />
+        )}
+      </View>
     </SafeAreaView>
   );
 }

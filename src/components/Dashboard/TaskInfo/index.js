@@ -7,6 +7,7 @@ import shortid from 'shortid';
 import styles from './taskInfoStyle';
 import appTheme from '../../../constants/colors';
 import {AuthContext} from '../../../context';
+let Image_Http_URL ={ uri: 'https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png'};
 
 export function TaskInfo({task}) {
   const {state, dispatch} = useContext(AuthContext);
@@ -49,7 +50,7 @@ export function TaskInfo({task}) {
             <Image
               key={shortid.generate()}
               style={styles.memberPhoto}
-              source={{uri: member?.photo}}
+              source={Image_Http_URL}
             />
           ))}
         </View>

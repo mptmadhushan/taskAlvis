@@ -17,6 +17,7 @@ import {AuthContext} from '../../context';
 import {TabScreenHeader} from '../../components';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
+let Image_Http_URL ={ uri: 'https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png'};
 
 export function Profile({navigation}) {
   const {state, dispatch} = useContext(AuthContext);
@@ -54,69 +55,21 @@ export function Profile({navigation}) {
               </View>
               <Image
                 style={styles.profilePhoto}
-                source={{
-                  uri: user?.photo,
-                }}
-              />
+                source={Image_Http_URL}></Image>
               <View style={styles.statisticsContainer}>
                 <Text style={styles.statisticsText}>20</Text>
                 <Text style={styles.statisticsTitle}>Ongoing Tasks</Text>
               </View>
             </View>
             <View style={styles.profileCenterSection}>
-              <Text style={styles.nameText}>{user?.name}</Text>
+              <Text style={styles.nameText}>dev user</Text>
               <Text style={styles.designationText}>{user?.designation}</Text>
               <TouchableOpacity style={styles.editProfileWrapper}>
                 <Text style={styles.editProfileText}>Edit Profile</Text>
               </TouchableOpacity>
             </View>
           </View>
-          {/* <View style={styles.exploreSection}>
-            <Text style={styles.exploreHeader}>Explore</Text>
-            <View style={styles.exploreContent}>
-              <TouchableOpacity style={styles.singleExplore}>
-                <Ionicons name="people" size={22} color={appTheme.COLOR1} />
-                <Text style={styles.exploreText}>Members</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.singleExplore}>
-                <MaterialCommunityIcons
-                  name="crown"
-                  size={22}
-                  color={appTheme.COLOR1}
-                />
-                <Text style={styles.exploreText}>Go Pro</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.singleExplore}>
-                <Fontisto
-                  name="pie-chart-1"
-                  size={22}
-                  color={appTheme.COLOR1}
-                />
-                <Text style={styles.exploreText}>Report</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.singleExplore}>
-                <SimpleLineIcons
-                  name="settings"
-                  size={22}
-                  color={appTheme.COLOR1}
-                />
-                <Text style={styles.exploreText}>Settings</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.singleExplore,
-                  {marginRight: 'auto', marginLeft: '7%'},
-                ]}
-                onPress={() => handleNavigation('Onboarding')}>
-                <MaterialCommunityIcons
-                  name="logout"
-                  size={22}
-                  color={appTheme.COLOR1}
-                />
-                <Text style={styles.exploreText}>Log out</Text>
-              </TouchableOpacity>
-            </View>
-          </View> */}
+          
         </View>
       </ScrollView>
     </SafeAreaView>

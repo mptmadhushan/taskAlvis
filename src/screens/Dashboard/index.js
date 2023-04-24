@@ -147,7 +147,7 @@ export function Dashboard() {
               </View>
             </TouchableOpacity>
             <DropDownPicker
-              placeholder="All Tasks"
+              placeholder="All Tasks-->"
               placeholderStyle={{fontSize: 15}}
               open={open}
               value={value}

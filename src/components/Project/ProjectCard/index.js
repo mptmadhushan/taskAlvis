@@ -7,6 +7,7 @@ import styles from './projectCardStyle';
 import appTheme from '../../../constants/colors';
 import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import {getScreenParent} from '../../../utils/NavigationHelper';
+let Image_Http_URL ={ uri: 'https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png'};
 
 export function ProjectCard({project, navigation}) {
   const handleNavigation = (screen, params) => {
@@ -27,7 +28,7 @@ export function ProjectCard({project, navigation}) {
               <Image
                 key={shortid.generate()}
                 style={styles.projectMemberPhoto}
-                source={{uri: member?.photo}}
+                source={Image_Http_URL}
               />
             ))}
             <TouchableOpacity style={styles.plusBtnContainer}>

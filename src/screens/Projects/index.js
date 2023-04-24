@@ -61,7 +61,7 @@ export function Projects({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
-        leftComponent={() => <Text style={styles.headerTitle}>Projects</Text>}
+        leftComponent={() => <Text style={styles.headerTitle}>Tasks</Text>}
         isSearchBtnVisible={true}
         isMoreBtnVisible={true}
       />
