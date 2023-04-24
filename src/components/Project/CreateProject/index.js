@@ -11,14 +11,32 @@ import shortid from 'shortid';
 import styles from './createProjectStyle';
 import {combineData} from '../../../utils/DataHelper';
 import {AuthContext} from '../../../context';
+import {getScreenParent} from '../../../utils/NavigationHelper';
+import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 
-export function CreateProject() {
+
+export function CreateProject({}) {
   const {state, dispatch} = useContext(AuthContext);
   const {members} = state;
   const [data, setData] = useState({
     newProject: {title: '', description: '', selectedMembers: []},
   });
+  const handleNavigation = (screen, params) => {
+    navigateToNestedRoute(getScreenParent(screen), screen, params);
+  };
+  const handleLocation=async()=>{
+    await handleBottomModal('')
+    console.log('toggleBottomModal')
+    handleNavigation('LocationPicker')
 
+  }
+  const handleBottomModal = bottomModal => {
+    console.log("🚀 ~ file: index.js:32 ~ handleBottomModal ~ bottomModal:", bottomModal)
+    dispatch({
+      type: 'toggleBottomModal',
+      payload: {bottomModal},
+    });
+  };
   const handleSetValue = (field, value) => {
     let {newProject} = data;
     if (field === 'selectedMembers') {
@@ -55,7 +73,7 @@ export function CreateProject() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.boldText}>Create Project</Text>
+      <Text style={styles.boldText}>Create Task</Text>
       <TextInput
         placeholder="Title"
         placeholderTextColor="gray"
@@ -67,6 +85,12 @@ export function CreateProject() {
         placeholderTextColor="gray"
         style={styles.textInput}
         onChangeText={text => handleSetValue('description', text)}
+      />
+       <TextInput
+        placeholder="Date and Time"
+        placeholderTextColor="gray"
+        style={styles.textInput}
+        onChangeText={text => handleSetValue('Date and Time', text)}
       />
       <View style={styles.teamTextWrapper}>
         <Text style={styles.teamText}>Select Members</Text>
@@ -100,7 +124,10 @@ export function CreateProject() {
           </View>
         </ScrollView>
       </View>
-      <TouchableOpacity style={styles.btnWrapper}>
+      <TouchableOpacity  onPress={() => handleLocation('')} style={styles.btnWrapper}>
+        <Text style={styles.btnText}>Select Location</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={()=> handleBottomModal('')} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Send</Text>
       </TouchableOpacity>
     </View>

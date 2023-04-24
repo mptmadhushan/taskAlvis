@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useState}from 'react';
 import {
   View,
   Text,
@@ -16,13 +16,27 @@ import {getScreenParent} from '../../utils/NavigationHelper';
 import appTheme from '../../constants/colors';
 
 export function Login({navigation}) {
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+ 
+
   const handleBackButton = () => {
     navigation?.goBack();
   };
-
+  const handleLogin = () => {
+  if(!userName){
+    alert('enter valid username')
+  }if(!password ){
+    alert('enter valid password')
+  }else{
+    handleNavigation('BottomStack')
+  }
+  
+}
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,6 +57,7 @@ export function Login({navigation}) {
           <Ionicons name="person-outline" size={20} color="gray" />
           <TextInput
             placeholder="Username"
+            onChangeText={newText => setUserName(newText)}
             placeholderTextColor="gray"
             style={styles.textInput}
           />
@@ -52,6 +67,7 @@ export function Login({navigation}) {
           <TextInput
             placeholder="Password"
             placeholderTextColor="gray"
+            onChangeText={newText => setPassword(newText)}
             secureTextEntry={true}
             style={styles.textInput}
           />
@@ -65,7 +81,7 @@ export function Login({navigation}) {
             value={true}
           />
         </View>
-        <TouchableOpacity style={styles.loginBtnWrapper}>
+        <TouchableOpacity style={styles.loginBtnWrapper}onPress={() => handleLogin()}>
           <Text style={styles.loginBtnText}>LOGIN</Text>
         </TouchableOpacity>
         <TouchableOpacity

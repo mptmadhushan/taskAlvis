@@ -44,10 +44,10 @@ export function Dashboard() {
   };
 
   const handleCreateTask = () => {
-    dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: 'CreateTask'},
-    });
+    // dispatch({
+    //   type: 'toggleBottomModal',
+    //   payload: {bottomModal: 'CreateTask'},
+    // });
   };
 
   return (

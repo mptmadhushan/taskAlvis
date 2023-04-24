@@ -21,7 +21,7 @@ export function CreateTask() {
   const {state, dispatch} = useContext(AuthContext);
   const {members} = state;
   const [data, setData] = useState({
-    newTask: {title: '', description: '', selectedMembers: []},
+    newTask: {title: '', description: '',date:'', selectedMembers: []},
   });
 
   const handleSetValue = (field, value) => {
@@ -73,13 +73,13 @@ export function CreateTask() {
         placeholder="Description"
         placeholderTextColor="gray"
         style={styles.textInput}
-        onChangeText={text => handleSetValue('title', text)}
+        onChangeText={text => handleSetValue('description', text)}
       />
       <TextInput
         placeholder="Date and Time"
         placeholderTextColor="gray"
         style={styles.textInput}
-        onChangeText={text => handleSetValue('title', text)}
+        onChangeText={text => handleSetValue('date', text)}
       />
       <View style={styles.teamTextWrapper}>
         <Text style={styles.teamText}>Select Members</Text>

@@ -146,13 +146,18 @@ const SingleStack = () => {
         component={LocationPicker}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="BottomStack"
+        component={BottomStack}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
 
 function AppStack() {
   return (
-    <Stack.Navigator initialRouteName="BottomStack">
+    <Stack.Navigator initialRouteName="SingleStack">
       
       <Stack.Screen
         name="SingleStack"
