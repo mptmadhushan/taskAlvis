@@ -24,13 +24,13 @@ export function ProjectCard({project, navigation}) {
           <Text style={styles.projectDescription}>{project?.description}</Text>
           <Text style={styles.projectTeamTitle}>Team</Text>
           <View style={styles.projectTeamWrapper}>
-            {project?.team?.map(member => (
+            {/* {project?.team?.map(member => (
               <Image
                 key={shortid.generate()}
                 style={styles.projectMemberPhoto}
                 source={Image_Http_URL}
               />
-            ))}
+            ))} */}
             <TouchableOpacity style={styles.plusBtnContainer}>
               <MaterialCommunityIcons name="plus" size={22} color="#fff" />
             </TouchableOpacity>

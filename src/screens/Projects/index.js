@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext,useEffect} from 'react';
 import {
   View,
   Text,
@@ -15,13 +15,34 @@ import {
   EmptyListComponent,
 } from '../../components';
 import {combineData} from '../../utils/DataHelper';
+import {getAllTask} from '../../api/getAllTask';
 
 export function Projects({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
 
   const {state, dispatch} = useContext(AuthContext);
-  const {projects} = state;
+  const [task, setTasks] = useState([]);
 
+  const {projects} = state;
+  useEffect(() => {
+    getAllTask()
+    .then(response => {
+      if (response.error) {
+        console.log('error__<', response.error);
+        return;
+      }
+      const {data} = response;
+      console.log('res', data);
+      setTasks(data)
+
+      // navigation.navigate('Home');
+    })
+    .catch(error => {
+      console.log('error-->', error);
+      // showToast(error.responses);
+    })
+    .finally(() => {});
+  }, []);
   const [data, setData] = useState({activeTab: 'All'});
 
   const toggleTab = tab => {
@@ -87,9 +108,9 @@ export function Projects({navigation}) {
             </TouchableOpacity>
           ))}
         </View>
-        {projects?.length > 0 ? (
+        {task?.length > 0 ? (
           <FlatList
-            data={getProjects()}
+            data={task}
             keyExtractor={(item, index) => shortid.generate()}
             renderItem={renderProjectInfo}
             horizontal={false}
