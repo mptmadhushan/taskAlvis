@@ -4,8 +4,8 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  ScrollView,
-  Image,
+  ScrollView,Platform,
+  Image,Button
 } from 'react-native';
 import shortid from 'shortid';
 import styles from './createProjectStyle';
@@ -13,7 +13,8 @@ import {combineData} from '../../../utils/DataHelper';
 import {AuthContext} from '../../../context';
 import {getScreenParent} from '../../../utils/NavigationHelper';
 import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import {getAllUsers} from '../../../api/getAllUsers';
 import {addTask} from '../../../api/addTask';
 
@@ -23,30 +24,13 @@ export function CreateProject({}) {
   const [data, setData] = useState({
     newProject: {title: '', description: '', selectedMembers: []},
   });
-  const [date, setDate] = useState(new Date(1598051730000));
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setDate(currentDate);
-  };
-
-  const showMode = (currentMode) => {
-    DateTimePicker.open({
-      value: date,
-      onChange,
-      mode: currentMode,
-      is24Hour: true,
-    });
-  };
-
-  const showDatepicker = () => {
-    showMode('date');
-  };
+  
   const handleAddTask = () => {
   console.log(data)
     const payload = {
       title:data.newProject.title,
       description:data.newProject.description,
-      date:"date",
+      date:date,
       location:"location",
       "userId": 3
     };
@@ -88,15 +72,6 @@ export function CreateProject({}) {
     handleNavigation('LocationPicker')
 
   }
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
 
   const handleConfirm = (date) => {
     console.warn("A date has been picked: ", date);
@@ -164,6 +139,19 @@ export function CreateProject({}) {
     })
     .finally(() => {});
   }, []);
+  const [isPickerShow, setIsPickerShow] = useState(false);
+  const [date, setDate] = useState(new Date(Date.now()));
+
+  const showPicker = () => {
+    setIsPickerShow(true);
+  };
+
+  const onChange = (event, value) => {
+    setDate(value);
+    if (Platform.OS === 'android') {
+      setIsPickerShow(false);
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.boldText}>Create Task</Text>
@@ -179,12 +167,16 @@ export function CreateProject({}) {
         style={styles.textInput}
         onChangeText={text => handleSetValue('description', text)}
       />
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
+     <BouncyCheckbox
+  size={25}
+  fillColor="red"
+  unfillColor="#FFFFFF"
+  text="Custom Checkbox"
+  iconStyle={{ borderColor: "red" }}
+  innerIconStyle={{ borderWidth: 2 }}
+  textStyle={{ fontFamily: "JosefinSans-Regular" }}
+  onPress={(isChecked) => {}}
+/>
       <View style={styles.teamTextWrapper}>
         <Text style={styles.teamText}>Select Members</Text>
       </View>
@@ -225,6 +217,23 @@ export function CreateProject({}) {
       {/* <TouchableOpacity  onPress={() => showDatePicker()} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Pick date</Text>
       </TouchableOpacity> */}
+       {!isPickerShow && (
+        <View style={styles.btnContainer}>
+          <Button title="Show Picker" color="purple" onPress={showPicker} />
+        </View>
+      )}
+
+      {/* The date picker */}
+      {isPickerShow && (
+        <DateTimePicker
+          value={date}
+          mode={'date'}
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+          is24Hour={true}
+          onChange={onChange}
+          style={styles.datePicker}
+        />
+      )}
       <TouchableOpacity onPress={()=> handleBottomModal('')} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Send</Text>
       </TouchableOpacity>

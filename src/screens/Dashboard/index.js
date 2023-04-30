@@ -86,6 +86,7 @@ export function Dashboard() {
         )}
         isSearchBtnVisible={true}
         isMoreBtnVisible={true}
+        taskData={task}
       />
       <View style={styles.contentBody}>
         <View style={styles.statisticsSection}>

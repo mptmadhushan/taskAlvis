@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState,useEffect} from 'react';
 import {
   View,
   Text,
@@ -16,13 +16,58 @@ import {
 } from 'react-native-popup-menu';
 import {combineData} from '../../../utils/DataHelper';
 import appTheme from '../../../constants/colors';
+import {getAllTask} from '../../../api/getAllTask';
+let items = [
+  {
+    id: 1,
+    name: "JavaScript",
+    value: "JavaScript"
+  },
+  {
+    id: 2,
+    name: "Java",
+    value: "Java"
+  },
+  {
+    id: 3,
+    name: "Ruby",
+    value: "Ruby"
+  },
+  {
+    id: 4,
+    name: "React Native",
+    value: "React Native"
+  },
+  {
+    id: 5,
+    name: "PHP",
+    value: "PHP"
+  },
+  {
+    id: 6,
+    name: "Python",
+    value: "Python"
+  },
+  {
+    id: 7,
+    name: "Go",
+    value: "Go"
+  },
+  {
+    id: 8,
+    name: "Swift",
+    value: "Swift"
+  }
+];
 
 export function TabScreenHeader({
   leftComponent,
   isSearchBtnVisible,
   isMoreBtnVisible,
+  taskData
 }) {
   const [data, setData] = useState({isSearchFieldVisible: false});
+  const [selectedValues, setSelectedValues] = useState([]);
 
   const toggleSearchField = () => {
     let {isSearchFieldVisible} = data;
@@ -30,6 +75,25 @@ export function TabScreenHeader({
     setData(combineData(data, {isSearchFieldVisible}));
   };
 
+  useEffect(() => {
+    getAllTask()
+    .then(response => {
+      if (response.error) {
+        console.log('error__<', response.error);
+        return;
+      }
+      const {data} = response;
+      console.log("🚀 ~ file: header ~ data:", data)
+      setTasks(data)
+
+      // navigation.navigate('Home');
+    })
+    .catch(error => {
+      console.log('error-->', error);
+      // showToast(error.responses);
+    })
+    .finally(() => {});
+  }, []);
   return (
     <View style={styles.headerContainer}>
       {leftComponent()}
@@ -53,6 +117,14 @@ export function TabScreenHeader({
               </TouchableOpacity>
             )}
           </View>
+        //   <SearchableDropdown
+        //   options={items}
+        //   selectedValues={selectedValues}
+        //   setSelectedValues={setSelectedValues}
+        //   label="test dropdown"
+        //   placeholder="Test placeholder"
+        //   inputSize={300}
+        // />
         ) : null}
         {isMoreBtnVisible ? (
           <Menu>
