@@ -171,7 +171,25 @@ export function CreateProject({}) {
   size={25}
   fillColor="red"
   unfillColor="#FFFFFF"
-  text="Custom Checkbox"
+  text="Is Repeative 7 weekly"
+  iconStyle={{ borderColor: "red" }}
+  innerIconStyle={{ borderWidth: 2 }}
+  textStyle={{ fontFamily: "JosefinSans-Regular" }}
+  onPress={(isChecked) => {}}
+/><BouncyCheckbox
+  size={25}
+  fillColor="red"
+  unfillColor="#FFFFFF"
+  text="Is Repeative monthly"
+  iconStyle={{ borderColor: "red" }}
+  innerIconStyle={{ borderWidth: 2 }}
+  textStyle={{ fontFamily: "JosefinSans-Regular" }}
+  onPress={(isChecked) => {}}
+/><BouncyCheckbox
+  size={25}
+  fillColor="red"
+  unfillColor="#FFFFFF"
+  text="Is Repeative yearly"
   iconStyle={{ borderColor: "red" }}
   innerIconStyle={{ borderWidth: 2 }}
   textStyle={{ fontFamily: "JosefinSans-Regular" }}
