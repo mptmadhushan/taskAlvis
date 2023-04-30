@@ -10,6 +10,7 @@ import {AuthContext} from '../../../context';
 let Image_Http_URL ={ uri: 'https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png'};
 
 export function TaskInfo({task}) {
+  console.log("🚀 askInfo ~ task:", task)
   const {state, dispatch} = useContext(AuthContext);
 
   const handleBottomModal = () => {
@@ -30,29 +31,29 @@ export function TaskInfo({task}) {
         <AntDesign
           name="checksquareo"
           size={20}
-          color={
-            task?.progress === 100 ? appTheme.COLOR2 : appTheme.INACTIVE_COLOR
-          }
+          // color={
+          //   task?.progress === 100 ? appTheme.COLOR2 : appTheme.INACTIVE_COLOR
+          // }
           style={styles.taskProgressIndicator}
         />
         <View style={styles.taskMiddleColumn}>
           <Text style={styles.taskTitle} numberOfLines={1} ellipsizeMode="tail">
             {task?.title}
           </Text>
-          <ProgressBar
+          {/* <ProgressBar
             progress={Number(task?.progress)}
             color={task?.progress === 100 ? appTheme.COLOR2 : appTheme.COLOR1}
             style={styles.taskProgressBar}
-          />
+          /> */}
         </View>
         <View style={styles.teamWrapper}>
-          {task?.members?.slice(0, 2)?.map(member => (
+          {/* {task?.members?.slice(0, 2)?.map(member => (
             <Image
               key={shortid.generate()}
               style={styles.memberPhoto}
               source={Image_Http_URL}
             />
-          ))}
+          ))} */}
         </View>
         <MaterialIcons
           name="keyboard-arrow-right"

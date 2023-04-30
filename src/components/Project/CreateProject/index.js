@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext,useEffect} from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,8 @@ import {AuthContext} from '../../../context';
 import {getScreenParent} from '../../../utils/NavigationHelper';
 import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {getAllUsers} from '../../../api/getAllUsers';
+import {addTask} from '../../../api/addTask';
 
 export function CreateProject({}) {
   const {state, dispatch} = useContext(AuthContext);
@@ -39,7 +41,41 @@ export function CreateProject({}) {
   const showDatepicker = () => {
     showMode('date');
   };
-
+  const handleAddTask = () => {
+  console.log(data)
+    const payload = {
+      title:data.newProject.title,
+      description:data.newProject.description,
+      date:"date",
+      location:"location",
+      "userId": 3
+    };
+    console.log(payload);
+    // setLoading(true);
+  
+    addTask(payload)
+      .then(response => {
+        if (response.error) {
+          console.log('error__<', response.error);
+          // showToast('try again');
+          alert('error Please Check')
+          return;
+        }
+        const {data} = response;
+        console.log('res', response.data);
+  
+        console.log('token', data.accessToken);
+        handleNavigation('BottomStack')
+      })
+      .catch(error => {
+        console.log('error-->', error);
+  
+        // showToast(error.responses);
+      })
+      .finally(() => {
+        // setLoading(false);
+      });
+  };
   const showTimepicker = () => {
     showMode('time');
   };
@@ -72,6 +108,7 @@ export function CreateProject({}) {
       type: 'toggleBottomModal',
       payload: {bottomModal},
     });
+    handleAddTask()
   };
   const handleSetValue = (field, value) => {
     let {newProject} = data;
@@ -106,7 +143,27 @@ export function CreateProject({}) {
     }
     return value;
   };
+  const [users, setUsers] = useState(null);
 
+  useEffect(() => {
+    getAllUsers()
+    .then(response => {
+      if (response.error) {
+        console.log('error__<', response.error);
+        return;
+      }
+      const {data} = response;
+      console.log('res', data);
+      setUsers(data)
+
+      // navigation.navigate('Home');
+    })
+    .catch(error => {
+      console.log('error-->', error);
+      // showToast(error.responses);
+    })
+    .finally(() => {});
+  }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.boldText}>Create Task</Text>
@@ -122,7 +179,7 @@ export function CreateProject({}) {
         style={styles.textInput}
         onChangeText={text => handleSetValue('description', text)}
       />
-        <DateTimePickerModal
+      <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
         onConfirm={handleConfirm}
@@ -134,7 +191,7 @@ export function CreateProject({}) {
       <View style={styles.teamSection}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.teamWrapper}>
-            {members?.map(member => (
+            {users?.map(member => (
               <TouchableOpacity
                 key={shortid.generate()}
                 style={[
@@ -144,7 +201,9 @@ export function CreateProject({}) {
                 onPress={() => handleSetValue('selectedMembers', member)}>
                 <Image
                   style={styles.memberPhoto}
-                  source={{uri: member?.photo}}
+                  source={{
+                    uri: 'https://reactnative.dev/img/tiny_logo.png',
+                  }}
                 />
                 <Text
                   style={[
@@ -153,19 +212,19 @@ export function CreateProject({}) {
                   ]}
                   numberOfLines={2}
                   ellipsizeMode="tail">
-                  {member?.name}
+                  {member?.username}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
         </ScrollView>
       </View>
-      <TouchableOpacity  onPress={() => handleLocation('')} style={styles.btnWrapper}>
+      {/* <TouchableOpacity  onPress={() => handleLocation('')} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Select Location</Text>
-      </TouchableOpacity>
-      <TouchableOpacity  onPress={() => showDatePicker()} style={styles.btnWrapper}>
+      </TouchableOpacity> */}
+      {/* <TouchableOpacity  onPress={() => showDatePicker()} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Pick date</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity onPress={()=> handleBottomModal('')} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Send</Text>
       </TouchableOpacity>

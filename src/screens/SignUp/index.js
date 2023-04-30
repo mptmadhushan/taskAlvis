@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {
   View,
   Text,
@@ -15,8 +15,14 @@ import styles from './signUpStyle';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import appTheme from '../../constants/colors';
+import { register } from '../../api/Register';
 
 export function SignUp({navigation}) {
+
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+
   const handleBackButton = () => {
     navigation?.goBack();
   };
@@ -25,6 +31,44 @@ export function SignUp({navigation}) {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
 
+  const handleLogin = () => {
+    if(!userName){
+      alert('invalid email')
+    }if(!password){
+      alert('invalid email')
+    }
+  
+    const payload = {
+      username: userName,
+      password: password,
+      email: email,
+    };
+    console.log(payload);
+    // setLoading(true);
+  
+    register(payload)
+      .then(response => {
+        if (response.error) {
+          console.log('error__<', response.error);
+          // showToast('try again');
+          alert('error Please Check')
+          return;
+        }
+        const {data} = response;
+        console.log('res', response.data);
+  
+        console.log('token', data.accessToken);
+        handleNavigation('BottomStack')
+      })
+      .catch(error => {
+        console.log('error-->', error);
+  
+        // showToast(error.responses);
+      })
+      .finally(() => {
+        // setLoading(false);
+      });
+    }
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -45,12 +89,14 @@ export function SignUp({navigation}) {
           <TextInput
             placeholder="Username"
             placeholderTextColor="gray"
+            onChangeText={newText => setUserName(newText)}
             style={styles.textInput}
           />
         </View>
         <View style={styles.inputRow}>
           <MaterialCommunityIcons name="email-outline" size={20} color="gray" />
           <TextInput
+            onChangeText={newText => setEmail(newText)}
             placeholder="Email"
             placeholderTextColor="gray"
             secureTextEntry={true}
@@ -63,6 +109,7 @@ export function SignUp({navigation}) {
             placeholder="Password"
             placeholderTextColor="gray"
             secureTextEntry={true}
+            onChangeText={newText => setPassword(newText)}
             style={styles.textInput}
           />
           <Octicons name="eye-closed" size={20} color="gray" />
@@ -75,7 +122,7 @@ export function SignUp({navigation}) {
             value={true}
           />
         </View>
-        <TouchableOpacity style={styles.signUpBtnWrapper}>
+        <TouchableOpacity onPress={() => handleLogin()} style={styles.signUpBtnWrapper}>
           <Text style={styles.signUpBtnText}>SIGN UP</Text>
         </TouchableOpacity>
         <TouchableOpacity

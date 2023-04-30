@@ -14,7 +14,7 @@ import styles from './loginStyle';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import appTheme from '../../constants/colors';
-import APIKit from '../../constants/apiKit';
+import {login} from '../../api/authAPI';
 
 export function Login({navigation}) {
   const [userName, setUserName] = useState('');
@@ -24,16 +24,53 @@ export function Login({navigation}) {
   const handleBackButton = () => {
     navigation?.goBack();
   };
-  const handleLogin = () => {
-  if(!userName){
-    alert('enter valid username')
-  }if(!password ){
-    alert('enter valid password')
-  }else{
-    handleNavigation('BottomStack')
-  }
+//   const handleLogin = () => {
+//   if(!userName){
+//     alert('enter valid username')
+//   }if(!password ){
+//     alert('enter valid password')
+//   }else{
+//     handleNavigation('BottomStack')
+//   }
   
-}
+// }
+const handleLogin = () => {
+  if(!userName){
+    alert('invalid email')
+  }if(!password){
+    alert('invalid email')
+  }
+
+  const payload = {
+    username: userName,
+    password: password,
+  };
+  console.log(payload);
+  // setLoading(true);
+
+  login(payload)
+    .then(response => {
+      if (response.error) {
+        console.log('error__<', response.error);
+        // showToast('try again');
+        alert('error Please Check')
+        return;
+      }
+      const {data} = response;
+      console.log('res', response.data);
+
+      console.log('token', data.accessToken);
+      handleNavigation('BottomStack')
+    })
+    .catch(error => {
+      console.log('error-->', error);
+
+      // showToast(error.responses);
+    })
+    .finally(() => {
+      // setLoading(false);
+    });
+};
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };

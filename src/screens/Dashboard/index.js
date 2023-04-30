@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState,useEffect} from 'react';
 import {
   View,
   Text,
@@ -16,11 +16,13 @@ import {AuthContext} from '../../context';
 import {TabScreenHeader, TaskInfo, EmptyListComponent} from '../../components';
 import {formatCurrentDate} from '../../utils/DataHelper';
 import appTheme from '../../constants/colors';
+import {getAllTask} from '../../api/getAllTask';
 
 export function Dashboard() {
   const {state, dispatch} = useContext(AuthContext);
   let {tasks} = state;
   const [open, setOpen] = useState(false);
+  const [task, setTasks] = useState([]);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
     {label: 'All Tasks', value: 'All Tasks'},
@@ -28,21 +30,40 @@ export function Dashboard() {
     {label: 'Completed', value: 'Completed'},
   ]);
 
+
   const getTasks = () => {
-    let tasksToRender = [];
+    let tasksToRender = task;
     if (!value || value === 'All Tasks') {
-      tasksToRender = tasks;
+      tasksToRender = task;
     } else if ((value === 'Ongoing')) {
       tasksToRender =
-        tasks.filter(task => task.progress < 100) || [];
+      task.filter(task => task.progress < 100) || [];
     } else if ((value === 'Completed')) {
       tasksToRender =
-        tasks.filter(task => task.progress === 100) || [];
+      task.filter(task => task.progress === 100) || [];
     }
 
     return tasksToRender;
   };
+  useEffect(() => {
+    getAllTask()
+    .then(response => {
+      if (response.error) {
+        console.log('error__<', response.error);
+        return;
+      }
+      const {data} = response;
+      console.log('res', data);
+      setTasks(data)
 
+      // navigation.navigate('Home');
+    })
+    .catch(error => {
+      console.log('error-->', error);
+      // showToast(error.responses);
+    })
+    .finally(() => {});
+  }, []);
   const handleCreateTask = () => {
     // dispatch({
     //   type: 'toggleBottomModal',
