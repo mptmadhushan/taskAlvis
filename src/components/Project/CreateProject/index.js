@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,Platform,
-  Image,Button
+  Image,
 } from 'react-native';
 import shortid from 'shortid';
 import styles from './createProjectStyle';
@@ -13,17 +13,19 @@ import {combineData} from '../../../utils/DataHelper';
 import {AuthContext} from '../../../context';
 import {getScreenParent} from '../../../utils/NavigationHelper';
 import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import {getAllUsers} from '../../../api/getAllUsers';
 import {addTask} from '../../../api/addTask';
+import { DatePicker, Button, Provider ,WingBlank,Modal,
+  Toast,} from '@ant-design/react-native'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export function CreateProject({}) {
   const {state, dispatch} = useContext(AuthContext);
   const {members} = state;
   const [data, setData] = useState({
     newProject: {title: '', description: '', selectedMembers: []},
-  });
+  }); 
   
   const handleAddTask = () => {
   console.log(data)
@@ -86,7 +88,9 @@ export function CreateProject({}) {
     handleAddTask()
   };
   const handleSetValue = (field, value) => {
+    console.log("🚀 ~ file: index.js:90 ~ handleSetValue ~ field, value:", field, value)
     let {newProject} = data;
+    console.log("🚀 ~ file: index.js:92 ~ handleSetValue ~ newProject:", newProject)
     if (field === 'selectedMembers') {
       let {selectedMembers} = newProject;
       const foundIndex = selectedMembers?.findIndex(a => a?.id === value?.id);
@@ -111,7 +115,7 @@ export function CreateProject({}) {
     let value;
     let {selectedMembers} = data?.newProject;
     const foundIndex = selectedMembers?.findIndex(
-      a => a?.id?.toLowerCase() == member?.id?.toLowerCase(),
+      a => a?.id == member?.id,
     );
     if (foundIndex > -1) {
       value = true;
@@ -119,6 +123,7 @@ export function CreateProject({}) {
     return value;
   };
   const [users, setUsers] = useState(null);
+  const [visible1, setVisible] = useState(false);
 
   useEffect(() => {
     getAllUsers()
@@ -140,20 +145,23 @@ export function CreateProject({}) {
     .finally(() => {});
   }, []);
   const [isPickerShow, setIsPickerShow] = useState(false);
-  const [date, setDate] = useState(new Date(Date.now()));
+  const [date, setDate] = useState("");
 
   const showPicker = () => {
     setIsPickerShow(true);
   };
 
-  const onChange = (event, value) => {
+  const onChange = (value) => {
     setDate(value);
-    if (Platform.OS === 'android') {
-      setIsPickerShow(false);
-    }
+      setDate(value);
   };
+  const onClose1 = () => {
+   setVisible(false)
+  }
   return (
     <View style={styles.container}>
+    <Provider>
+      
       <Text style={styles.boldText}>Create Task</Text>
       <TextInput
         placeholder="Title"
@@ -167,27 +175,109 @@ export function CreateProject({}) {
         style={styles.textInput}
         onChangeText={text => handleSetValue('description', text)}
       />
+          <DatePicker
+            value={date}
+            mode="date"
+            title="hello"
+            defaultDate={new Date()}
+            minDate={new Date(2015, 7, 6)}
+            maxDate={new Date(2026, 11, 3)}
+            onChange={onChange}
+            format="YYYY-MM-DD">
+             <Button width="100%"  style={styles.btnWrapper}><Text style={styles.btnText}>Select Date</Text></Button>
+          </DatePicker>
+          <Button onPress={()=> setVisible(true)} style={styles.btnWrapper}>
+        <Text style={styles.btnText}>Select Location</Text>
+      </Button>
+       {/* <GooglePlacesAutocomplete
+      placeholder='Search'
+      styles={{width:400,borderColor:'blue',borderWidth:2}}
+      onPress={(data, details = null) => {
+        // 'details' is provided when fetchDetails = true
+        console.log(data, details);
+      }}
+      query={{
+        key: 'AIzaSyCwwyOJUiBpHmDwJRrtNh53fpRfaJnHVKQ',
+        language: 'en',
+      }}
+    /> */}
+    <Modal
+            transparent={false}
+            visible={visible1}
+            animationType="slide-up"
+            onClose={()=>onClose1()}>
+            <View style={{ paddingVertical: 220 }}>
+            <GooglePlacesAutocomplete
+            placeholder='Where To ?'
+            minLength={4}
+            autoFocus={true}
+            listViewDisplayed="auto"
+            returnKeyType={'search'}
+            fetchDetails={true}
+            onPress={(data, details = null) => {
+                console.log("🚀 ~ file: index.js:204 ~ CreateProject ~ data, details:", data, details)
+                // props.notifyChange(details.geometry.location,data);
+            }}
+            query={{
+                key: 'AIzaSyCwwyOJUiBpHmDwJRrtNh53fpRfaJnHVKQ',
+                language: 'en',
+            }}
+            nearbyPlacesAPI= 'GooglePlacesSearch'
+            debounce={200}
+            renderRow={(rowData) => {
+            const title = rowData.structured_formatting.main_text;
+            const address = rowData.structured_formatting.secondary_text;
+            return (
+             <View style={{backgroundColor:'orange'}}>
+              <Text style={{ fontSize: 14 ,color:'blue'}}>asd{title}</Text>
+              <Text style={{ fontSize: 14 ,color:'blue'}}>asd{address}</Text>
+             </View>
+             );
+            }}
+            styles={ styles }>
+        </GooglePlacesAutocomplete>
+            </View>
+            <Button
+              type="primary"
+              onPress={() => Toast.info('Hello Toast in Modal now works')}>
+              Hello Toast in Modal now works
+            </Button>
+            <Button type="primary" onPress={onClose1}>
+              close modal
+            </Button>
+          </Modal>
+    
+    <WingBlank
+      style={{
+        marginTop: 20,
+        marginBottom: 20,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+      }}>
      <BouncyCheckbox
   size={25}
-  fillColor="red"
+  fillColor="#3E9AE3"
   unfillColor="#FFFFFF"
-  text="Is Repeative 7 weekly"
+  text="Is Repeative weekly"
   iconStyle={{ borderColor: "red" }}
   innerIconStyle={{ borderWidth: 2 }}
   textStyle={{ fontFamily: "JosefinSans-Regular" }}
   onPress={(isChecked) => {}}
-/><BouncyCheckbox
+/>
+<BouncyCheckbox
   size={25}
-  fillColor="red"
+  fillColor="#3E9AE3"
   unfillColor="#FFFFFF"
   text="Is Repeative monthly"
   iconStyle={{ borderColor: "red" }}
   innerIconStyle={{ borderWidth: 2 }}
   textStyle={{ fontFamily: "JosefinSans-Regular" }}
   onPress={(isChecked) => {}}
-/><BouncyCheckbox
+/>
+<BouncyCheckbox
   size={25}
-  fillColor="red"
+  fillColor="#3E9AE3"
   unfillColor="#FFFFFF"
   text="Is Repeative yearly"
   iconStyle={{ borderColor: "red" }}
@@ -195,6 +285,14 @@ export function CreateProject({}) {
   textStyle={{ fontFamily: "JosefinSans-Regular" }}
   onPress={(isChecked) => {}}
 />
+
+    </WingBlank>
+    <Button onPress={()=> handleBottomModal('')} style={styles.btnWrapper}>
+        <Text style={styles.btnText}>Create Task</Text>
+      </Button> 
+     
+    
+
       <View style={styles.teamTextWrapper}>
         <Text style={styles.teamText}>Select Members</Text>
       </View>
@@ -229,32 +327,23 @@ export function CreateProject({}) {
           </View>
         </ScrollView>
       </View>
-      {/* <TouchableOpacity  onPress={() => handleLocation('')} style={styles.btnWrapper}>
+     
+      <TouchableOpacity  onPress={() => handleLocation('')} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Select Location</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
       {/* <TouchableOpacity  onPress={() => showDatePicker()} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Pick date</Text>
       </TouchableOpacity> */}
-       {!isPickerShow && (
-        <View style={styles.btnContainer}>
-          <Button title="Show Picker" color="purple" onPress={showPicker} />
-        </View>
-      )}
+       
 
       {/* The date picker */}
-      {isPickerShow && (
-        <DateTimePicker
-          value={date}
-          mode={'date'}
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          is24Hour={true}
-          onChange={onChange}
-          style={styles.datePicker}
-        />
-      )}
-      <TouchableOpacity onPress={()=> handleBottomModal('')} style={styles.btnWrapper}>
-        <Text style={styles.btnText}>Send</Text>
-      </TouchableOpacity>
+
+      
+
+      
+
+    </Provider>
+
     </View>
   );
 }

@@ -207,3 +207,6 @@ export function Dashboard() {
     </SafeAreaView>
   );
 }
+
+
+// https://stackoverflow.com/questions/65035612/sequelize-adduser-is-not-a-function

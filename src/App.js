@@ -9,7 +9,7 @@ import initialState from './store/state';
 import reducer from './store/reducer';
 import {AuthContext} from './context';
 import {navigationRef} from './navigators/RootNavigation';
-
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -22,12 +22,12 @@ const App = () => {
       <PaperProvider>
         <MenuProvider>
           <StatusBar barStyle="light-content" />
-          <SafeAreaView style={styles.areaContainer}>
+          <SafeAreaProvider style={styles.areaContainer}>
             <NavigationContainer ref={navigationRef}>
               <AppStack />
             </NavigationContainer>
             {state?.bottomModal ? <BottomModalContainer /> : null}
-          </SafeAreaView>
+          </SafeAreaProvider>
         </MenuProvider>
       </PaperProvider>
     </AuthContext.Provider>

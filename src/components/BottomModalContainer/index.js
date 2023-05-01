@@ -22,7 +22,7 @@ export function BottomModalContainer() {
         <TouchableOpacity
           style={styles.closeButton}
           onPress={() => handleBottomModal(null)}></TouchableOpacity>
-        <View style={styles.setModalDimensions('70%', '100%')}>
+        <View style={styles.setModalDimensions('90%', '100%')}>
           {bottomModal === 'CreateProject' ? (
             <CreateProject />
           ) : bottomModal === 'CreateTask' ? (

@@ -25,13 +25,6 @@ const App = ({navigation}) => {
           <MaterialIcons name="keyboard-arrow-left" size={25} color="gray" />
           <Text style={style.backText}>Back</Text>
         </TouchableOpacity>
-      </View><View>
-        <TouchableOpacity
-          style={style.backButton}
-          onPress={() => handleBackButton()}>
-          <MaterialIcons name="keyboard-arrow-left" size={25} color="gray" />
-          <Text style={style.backText}>Back</Text>
-        </TouchableOpacity>
       </View>
       <View style={styles.container}>
         <MapView

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, SafeAreaView, TouchableOpacity, Image} from 'react-native';
-import Illustration from '../../assets/illustration.png';
+import Illustration from '../../assets/PHOTO-2023-04-30-21-46-56.jpg';
 import styles from './onboardingStyle';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';

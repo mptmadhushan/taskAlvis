@@ -21,6 +21,7 @@ export function SignUp({navigation}) {
 
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [confpassword, setConfPassword] = useState('');
   const [email, setEmail] = useState('');
 
   const handleBackButton = () => {
@@ -36,6 +37,8 @@ export function SignUp({navigation}) {
       alert('invalid email')
     }if(!password){
       alert('invalid email')
+    }if(password==!confpassword){
+      alert('Please check your password!')
     }
   
     const payload = {
@@ -99,7 +102,6 @@ export function SignUp({navigation}) {
             onChangeText={newText => setEmail(newText)}
             placeholder="Email"
             placeholderTextColor="gray"
-            secureTextEntry={true}
             style={styles.textInput}
           />
         </View>
@@ -110,6 +112,17 @@ export function SignUp({navigation}) {
             placeholderTextColor="gray"
             secureTextEntry={true}
             onChangeText={newText => setPassword(newText)}
+            style={styles.textInput}
+          />
+          <Octicons name="eye-closed" size={20} color="gray" />
+        </View>
+        <View style={styles.inputRow}>
+          <MaterialIcons name="lock-outline" size={20} color="gray" />
+          <TextInput
+            placeholder="Confirm Password"
+            placeholderTextColor="gray"
+            secureTextEntry={true}
+            onChangeText={newText => setConfPassword(newText)}
             style={styles.textInput}
           />
           <Octicons name="eye-closed" size={20} color="gray" />
