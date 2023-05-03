@@ -4,65 +4,82 @@
 // Import React
 import React from 'react';
 // Import required components
-import {SafeAreaView,Text, StyleSheet,TouchableOpacity, View} from 'react-native';
+import {SafeAreaView,Text, StyleSheet,ScrollView,TouchableOpacity, View} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 // Import Map and Marker
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import style from './mapViewStyle';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-const App = ({navigation}) => {
+const LocationPicker = ({navigation}) => {
   const handleBackButton = () => {
     navigation?.goBack();
   };
+  const [lat, setLat] = React.useState('');
+  const [lng, setLng] = React.useState('');
 
   return (
-    <SafeAreaView style={style.container}>
-       <View>
+     
+      <View style={{disply:'flex',width:'100%',height:'100%'}}>
+               {/* <View>
         <TouchableOpacity
           style={style.backButton}
           onPress={() => handleBackButton()}>
           <MaterialIcons name="keyboard-arrow-left" size={25} color="gray" />
           <Text style={style.backText}>Back</Text>
         </TouchableOpacity>
-      </View><View>
-        <TouchableOpacity
-          style={style.backButton}
-          onPress={() => handleBackButton()}>
-          <MaterialIcons name="keyboard-arrow-left" size={25} color="gray" />
-          <Text style={style.backText}>Back</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.container}>
-        <MapView
-          style={styles.mapStyle}
-          provider={PROVIDER_GOOGLE}
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-          customMapStyle={mapStyle}>
-          <Marker
-            draggable
-            coordinate={{
-              latitude: 37.78825,
-              longitude: -122.4324,
+      </View> */}
+        <GooglePlacesAutocomplete
+          GooglePlacesDetailsQuery={{ fields: 'geometry', }}
+            placeholder='Search'
+            fetchDetails={true}
+            styles={{width:400,borderColor:'blue',borderWidth:2}}
+            onPress={(data, details = null) => {
+              console.log("data", data);
+              console.log("details", details);
+              console.log(JSON.stringify(details?.geometry?.location));
+              setLat(details?.geometry?.location.lat)
+              setLng(details?.geometry?.location.lat)
             }}
-            onDragEnd={
-              (e) => alert(JSON.stringify(e.nativeEvent.coordinate))
-            }
-            title={'Test Marker'}
-            description={'This is a description of the marker'}
+            query={{
+              key: 'AIzaSyCwwyOJUiBpHmDwJRrtNh53fpRfaJnHVKQ',
+              language: 'en',
+            }}
           />
-        </MapView>
+           <View style={styles.MainContainer}>  
+  
+           <View style={styles.MainContainer}>  
+  
+  <MapView  
+    style={styles.mapStyle}  
+    showsUserLocation={false}  
+    zoomEnabled={true}  
+    zoomControlEnabled={true}  
+    initialRegion={{  
+      latitude: 28.579660,   
+      longitude: 77.321110,  
+      latitudeDelta: 0.0922,  
+      longitudeDelta: 0.0421,  
+    }}>  
+
+    <Marker  
+      draggable
+      onDragEnd={(e) => console.log(e.nativeEvent.coordinate)}
+      coordinate={{ latitude: 28.579660, longitude: 77.321110 }}  
+      title={"JavaTpoint"}  
+      description={"Java Training Institute"}  
+    />  
+  </MapView>  
+    
+</View>    
+    
+</View>  
       </View>
-    </SafeAreaView>
   );
 };
-
-export default App;
+           
+export default LocationPicker;
 
 const mapStyle = [
   {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
@@ -146,6 +163,22 @@ const mapStyle = [
 ];
 
 const styles = StyleSheet.create({
+  MainContainer: {  
+    position: 'absolute',  
+    top: 100,  
+    left: 0,  
+    right: 0,  
+    bottom: 0,  
+    alignItems: 'center',  
+    justifyContent: 'flex-end',  
+  },  
+  mapStyle: {  
+    position: 'absolute',  
+    top: 0,  
+    left: 0,  
+    right: 0,  
+    bottom: 0,  
+  },  
   container: {
     position: 'absolute',
     top: 60,

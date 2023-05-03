@@ -16,6 +16,9 @@ import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import {getAllUsers} from '../../../api/getAllUsers';
 import {addTask} from '../../../api/addTask';
+import LocationPicker from '../../../components/Task/MapView/index';
+import locale from '../../../../node_modules/@ant-design/react-native//es/date-picker/locale/en_US';
+
 import { DatePicker, Button, Provider ,WingBlank,Modal,
   Toast,} from '@ant-design/react-native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -152,6 +155,7 @@ export function CreateProject({}) {
   };
 
   const onChange = (value) => {
+    console.log("🚀 ~ file: index.js:158 ~ onChange ~ value:", value)
     setDate(value);
       setDate(value);
   };
@@ -161,9 +165,11 @@ export function CreateProject({}) {
   return (
     <View style={styles.container}>
     <Provider>
-      
+      <ScrollView>
       <Text style={styles.boldText}>Create Task</Text>
       <TextInput
+      width="200"
+      
         placeholder="Title"
         placeholderTextColor="gray"
         style={styles.textInput}
@@ -177,13 +183,14 @@ export function CreateProject({}) {
       />
           <DatePicker
             value={date}
-            mode="date"
-            title="hello"
+            locale={locale}
+            title="Please select"
+          mode="datetime"
             defaultDate={new Date()}
             minDate={new Date(2015, 7, 6)}
             maxDate={new Date(2026, 11, 3)}
             onChange={onChange}
-            format="YYYY-MM-DD">
+            format="YYYY-MM-DD HH-MM">
              <Button width="100%"  style={styles.btnWrapper}><Text style={styles.btnText}>Select Date</Text></Button>
           </DatePicker>
           <Button onPress={()=> setVisible(true)} style={styles.btnWrapper}>
@@ -206,45 +213,13 @@ export function CreateProject({}) {
             visible={visible1}
             animationType="slide-up"
             onClose={()=>onClose1()}>
-            <View style={{ paddingVertical: 220 }}>
-            <GooglePlacesAutocomplete
-            placeholder='Where To ?'
-            minLength={4}
-            autoFocus={true}
-            listViewDisplayed="auto"
-            returnKeyType={'search'}
-            fetchDetails={true}
-            onPress={(data, details = null) => {
-                console.log("🚀 ~ file: index.js:204 ~ CreateProject ~ data, details:", data, details)
-                // props.notifyChange(details.geometry.location,data);
-            }}
-            query={{
-                key: 'AIzaSyCwwyOJUiBpHmDwJRrtNh53fpRfaJnHVKQ',
-                language: 'en',
-            }}
-            nearbyPlacesAPI= 'GooglePlacesSearch'
-            debounce={200}
-            renderRow={(rowData) => {
-            const title = rowData.structured_formatting.main_text;
-            const address = rowData.structured_formatting.secondary_text;
-            return (
-             <View style={{backgroundColor:'orange'}}>
-              <Text style={{ fontSize: 14 ,color:'blue'}}>asd{title}</Text>
-              <Text style={{ fontSize: 14 ,color:'blue'}}>asd{address}</Text>
-             </View>
-             );
-            }}
-            styles={ styles }>
-        </GooglePlacesAutocomplete>
-            </View>
-            <Button
-              type="primary"
-              onPress={() => Toast.info('Hello Toast in Modal now works')}>
-              Hello Toast in Modal now works
-            </Button>
+            <View style={{ paddingVertical: 10 }}>
             <Button type="primary" onPress={onClose1}>
               close modal
             </Button>
+            <LocationPicker/>
+            </View>
+            
           </Modal>
     
     <WingBlank
@@ -328,9 +303,9 @@ export function CreateProject({}) {
         </ScrollView>
       </View>
      
-      <TouchableOpacity  onPress={() => handleLocation('')} style={styles.btnWrapper}>
+      {/* <Button  onPress={() => handleLocation('')} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Select Location</Text>
-      </TouchableOpacity>
+      </Button> */}
       {/* <TouchableOpacity  onPress={() => showDatePicker()} style={styles.btnWrapper}>
         <Text style={styles.btnText}>Pick date</Text>
       </TouchableOpacity> */}
@@ -341,7 +316,7 @@ export function CreateProject({}) {
       
 
       
-
+      </ScrollView>
     </Provider>
 
     </View>
