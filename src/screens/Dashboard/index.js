@@ -34,15 +34,15 @@ export function Dashboard() {
   const getTasks = () => {
     let tasksToRender = task;
     if (!value || value === 'All Tasks') {
-      tasksToRender = task;
+      console.log(task)
+      tasksToRender = task.filter(task => task.status === 'all tasks') || [];;
     } else if ((value === 'Ongoing')) {
       tasksToRender =
-      task.filter(task => task.progress < 100) || [];
+      task.filter(task => task.status === 'ongoing') || [];;
     } else if ((value === 'Completed')) {
       tasksToRender =
-      task.filter(task => task.progress === 100) || [];
+      task.filter(task => task.status === 'completed') || [];;
     }
-
     return tasksToRender;
   };
   useEffect(() => {
@@ -104,7 +104,7 @@ export function Dashboard() {
                 style={styles.statisticsIcon}
               />
               <View style={styles.statisticsCounter}>
-                <Text style={styles.statisticsValue}>14</Text>
+                <Text style={styles.statisticsValue}>{task.filter(task => task?.status === 'ongoing').length}</Text>
                 <Text style={styles.statisticsTitle}>Ongoing</Text>
               </View>
             </View>
@@ -120,8 +120,8 @@ export function Dashboard() {
                 style={styles.statisticsIcon}
               />
               <View style={styles.statisticsCounter}>
-                <Text style={styles.statisticsValue}>20</Text>
-                <Text style={styles.statisticsTitle}>In Process</Text>
+                <Text style={styles.statisticsValue}>{task.length}</Text>
+                <Text style={styles.statisticsTitle}>All Tasks</Text>
               </View>
             </View>
             <View
@@ -136,7 +136,7 @@ export function Dashboard() {
                 style={styles.statisticsIcon}
               />
               <View style={styles.statisticsCounter}>
-                <Text style={styles.statisticsValue}>35</Text>
+                <Text style={styles.statisticsValue}>{task.filter(task => task?.status === 'completed').length}</Text>
                 <Text style={styles.statisticsTitle}>Completed</Text>
               </View>
             </View>
@@ -152,7 +152,7 @@ export function Dashboard() {
                 style={styles.statisticsIcon}
               />
               <View style={styles.statisticsCounter}>
-                <Text style={styles.statisticsValue}>28</Text>
+                <Text style={styles.statisticsValue}>{task.filter(task => task?.status === 'canceled').length}</Text>
                 <Text style={styles.statisticsTitle}>Cancelled</Text>
               </View>
             </View>

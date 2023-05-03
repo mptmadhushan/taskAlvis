@@ -43,6 +43,22 @@ export function Projects({navigation}) {
     })
     .finally(() => {});
   }, []);
+    const getTasks = () => {
+        let {activeTab} = data;
+     
+    let tasksToRender = task;
+    if (activeTab === 'All Tasks') {
+      console.log(task)
+      tasksToRender = task.filter(task => task.status === 'all tasks') || [];;
+    } else if ((activeTab === 'Ongoing')) {
+      tasksToRender =
+      task.filter(task => task.status === 'ongoing') || [];;
+    } else if ((activeTab === 'Completed')) {
+      tasksToRender =
+      task.filter(task => task.status === 'completed') || [];;
+    }
+    return tasksToRender;
+  };
   const [data, setData] = useState({activeTab: 'All'});
 
   const toggleTab = tab => {
@@ -110,7 +126,7 @@ export function Projects({navigation}) {
         </View>
         {task?.length > 0 ? (
           <FlatList
-            data={task}
+            data={getTasks()}
             keyExtractor={(item, index) => shortid.generate()}
             renderItem={renderProjectInfo}
             horizontal={false}

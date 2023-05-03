@@ -12,7 +12,7 @@ import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import style from './mapViewStyle';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-const LocationPicker = ({navigation}) => {
+const LocationPicker = ({navigation,chooseMessage}) => {
   const handleBackButton = () => {
     navigation?.goBack();
   };
@@ -41,6 +41,7 @@ const LocationPicker = ({navigation}) => {
               console.log(JSON.stringify(details?.geometry?.location));
               setLat(details?.geometry?.location.lat)
               setLng(details?.geometry?.location.lat)
+              chooseMessage(details?.geometry?.location)
             }}
             query={{
               key: 'AIzaSyCwwyOJUiBpHmDwJRrtNh53fpRfaJnHVKQ',
