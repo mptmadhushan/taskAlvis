@@ -268,7 +268,7 @@ export function CreateProject({}) {
             onClose={() => onClose1()}>
             <View style={{paddingVertical: 10}}>
               <Button type="primary" onPress={onClose1}>
-                close modal
+                close
               </Button>
               <LocationPicker chooseMessage={chooseMessage} />
             </View>

@@ -18,6 +18,7 @@ const LocationPicker = ({navigation,chooseMessage}) => {
   };
   const [lat, setLat] = React.useState('');
   const [lng, setLng] = React.useState('');
+  const [location, setLocation] = React.useState('');
 
   return (
      
@@ -41,6 +42,7 @@ const LocationPicker = ({navigation,chooseMessage}) => {
               console.log(JSON.stringify(details?.geometry?.location));
               setLat(details?.geometry?.location.lat)
               setLng(details?.geometry?.location.lat)
+              setLocation(details?.geometry?.location)
               chooseMessage(details?.geometry?.location)
             }}
             query={{
