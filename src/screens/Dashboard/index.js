@@ -35,7 +35,7 @@ export function Dashboard() {
     let tasksToRender = task;
     if (!value || value === 'All Tasks') {
       console.log(task)
-      tasksToRender = task.filter(task => task.status === 'all tasks') || [];;
+      tasksToRender = task;
     } else if ((value === 'Ongoing')) {
       tasksToRender =
       task.filter(task => task.status === 'ongoing') || [];;
@@ -160,16 +160,16 @@ export function Dashboard() {
         </View>
         <View style={styles.tasksSection}>
           <View style={styles.tasksHeader}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.tasksRow}
               onPress={() => handleCreateTask()}>
               <Text style={styles.tasksLeftText}>Add Task</Text>
               <View style={styles.plusBtnContainer}>
                 <MaterialCommunityIcons name="plus" size={19} color="#fff" />
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <DropDownPicker
-              placeholder="All Tasks-->"
+              placeholder="All Tasks"
               placeholderStyle={{fontSize: 15}}
               open={open}
               value={value}

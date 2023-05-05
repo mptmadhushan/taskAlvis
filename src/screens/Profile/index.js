@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext,useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -18,11 +18,12 @@ import {TabScreenHeader} from '../../components';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 let Image_Http_URL ={ uri: 'https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png'};
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function Profile({navigation}) {
   const {state, dispatch} = useContext(AuthContext);
   const {user} = state;
-
+  const [userData, setuserData] = useState(null)
   const handleBackButton = () => {
     navigation?.goBack();
   };
@@ -30,7 +31,20 @@ export function Profile({navigation}) {
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
+  useEffect(() => {
+    getData()
+  }, [])
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@storage_Key')
+      console.log("🚀 ~ file: index.js:40 ~ getData ~ jsonValue:", jsonValue)
+      setuserData(jsonValue)
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
 
+    } catch(e) {
+      // error reading value
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
@@ -64,8 +78,8 @@ export function Profile({navigation}) {
             <View style={styles.profileCenterSection}>
               <Text style={styles.nameText}>dev user</Text>
               <Text style={styles.designationText}>{user?.designation}</Text>
-              <TouchableOpacity style={styles.editProfileWrapper}>
-                <Text style={styles.editProfileText}>Edit Profile</Text>
+              <TouchableOpacity onPress={() => handleNavigation('Login')} style={styles.editProfileWrapper}>
+                <Text style={styles.editProfileText}>Log Out</Text>
               </TouchableOpacity>
             </View>
           </View>

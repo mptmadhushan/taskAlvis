@@ -175,14 +175,25 @@ export function CreateProject({}) {
         // showToast(error.responses);
       })
       .finally(() => {});
+      getData();
   }, []);
   const [isPickerShow, setIsPickerShow] = useState(false);
   const [date, setDate] = useState('');
+  const [userData, setuserData] = useState(null)
 
   const showPicker = () => {
     setIsPickerShow(true);
   };
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@storage_Key')
+      setuserData(jsonValue)
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
 
+    } catch(e) {
+      // error reading value
+    }
+  }
   const onChange = value => {
     console.log('🚀 ~ file: index.js:158 ~ onChange ~ value:', value);
     setDate(value);

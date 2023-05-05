@@ -84,7 +84,7 @@ export function TabScreenHeader({
       }
       const {data} = response;
       console.log("🚀 ~ file: header ~ data:", data)
-      setTasks(data)
+      // setTasks(data)
 
       // navigation.navigate('Home');
     })

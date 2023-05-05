@@ -16,6 +16,8 @@ import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import appTheme from '../../constants/colors';
 import { register } from '../../api/Register';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export function SignUp({navigation}) {
 
@@ -23,6 +25,7 @@ export function SignUp({navigation}) {
   const [password, setPassword] = useState('');
   const [confpassword, setConfPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [viewPass, setViewPass] = useState(false);
 
   const handleBackButton = () => {
     navigation?.goBack();
@@ -59,9 +62,8 @@ export function SignUp({navigation}) {
         }
         const {data} = response;
         console.log('res', response.data);
-  
+        storeData(data)
         console.log('token', data.accessToken);
-        handleNavigation('BottomStack')
       })
       .catch(error => {
         console.log('error-->', error);
@@ -71,6 +73,15 @@ export function SignUp({navigation}) {
       .finally(() => {
         // setLoading(false);
       });
+    }
+    const storeData = async (value) => {
+      try {
+        const jsonValue = JSON.stringify(value)
+        await AsyncStorage.setItem('@storage_Key', jsonValue)
+        handleNavigation('BottomStack')
+      } catch (e) {
+        // saving error
+      }
     }
   return (
     <SafeAreaView style={styles.container}>
@@ -110,31 +121,33 @@ export function SignUp({navigation}) {
           <TextInput
             placeholder="Password"
             placeholderTextColor="gray"
-            secureTextEntry={true}
+            secureTextEntry={viewPass}
             onChangeText={newText => setPassword(newText)}
             style={styles.textInput}
           />
-          <Octicons name="eye-closed" size={20} color="gray" />
+            <TouchableOpacity onPress={() => setViewPass(!viewPass)}>
+          <Octicons name="eye-closed" size={20} color="gray" /></TouchableOpacity>
         </View>
         <View style={styles.inputRow}>
           <MaterialIcons name="lock-outline" size={20} color="gray" />
           <TextInput
             placeholder="Confirm Password"
             placeholderTextColor="gray"
-            secureTextEntry={true}
+            secureTextEntry={viewPass}
             onChangeText={newText => setConfPassword(newText)}
             style={styles.textInput}
           />
-          <Octicons name="eye-closed" size={20} color="gray" />
+            <TouchableOpacity onPress={() => setViewPass(!viewPass)}>
+          <Octicons name="eye-closed" size={20} color="gray" /></TouchableOpacity>
         </View>
-        <View style={styles.savePwdRow}>
+        {/* <View style={styles.savePwdRow}>
           <Text style={styles.savePwdText}>Save Password</Text>
           <Switch
             trackColor={{false: appTheme.INACTIVE_COLOR, true: appTheme.COLOR2}}
             thumbColor="#fff"
             value={true}
           />
-        </View>
+        </View> */}
         <TouchableOpacity onPress={() => handleLogin()} style={styles.signUpBtnWrapper}>
           <Text style={styles.signUpBtnText}>SIGN UP</Text>
         </TouchableOpacity>

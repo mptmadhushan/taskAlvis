@@ -1,4 +1,4 @@
-import React ,{useState}from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Octicons from 'react-native-vector-icons/Octicons';
 import styles from './loginStyle';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
@@ -19,62 +20,83 @@ import {login} from '../../api/authAPI';
 export function Login({navigation}) {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
- 
+  const [viewPass, setViewPass] = useState(false);
 
   const handleBackButton = () => {
     navigation?.goBack();
   };
-//   const handleLogin = () => {
-//   if(!userName){
-//     alert('enter valid username')
-//   }if(!password ){
-//     alert('enter valid password')
-//   }else{
-//     handleNavigation('BottomStack')
-//   }
-  
-// }
-const handleLogin = () => {
-  if(!userName){
-    alert('invalid email')
-  }if(!password){
-    alert('invalid email')
-  }
+  //   const handleLogin = () => {
+  //   if(!userName){
+  //     alert('enter valid username')
+  //   }if(!password ){
+  //     alert('enter valid password')
+  //   }else{
+  //     handleNavigation('BottomStack')
+  //   }
 
-  const payload = {
-    username: userName,
-    password: password,
+  // }
+  useEffect(() => {
+    getData();
+  }, []);
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@storage_Key');
+      setuserData(jsonValue);
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
   };
-  console.log(payload);
-  // setLoading(true);
+  const handleLogin = () => {
+    if (!userName) {
+      alert('invalid email');
+    }
+    if (!password) {
+      alert('invalid email');
+    }
 
-  login(payload)
-    .then(response => {
-      if (response.error) {
-        console.log('error__<', response.error);
-        // showToast('try again');
-        alert('error Please Check')
-        return;
-      }
-      const {data} = response;
-      console.log('res', response.data);
+    const payload = {
+      username: userName,
+      password: password,
+    };
+    console.log(payload);
+    // setLoading(true);
 
-      console.log('token', data.accessToken);
-      handleNavigation('BottomStack')
-    })
-    .catch(error => {
-      console.log('error-->', error);
+    login(payload)
+      .then(response => {
+        if (response.error) {
+          console.log('error__<', response.error);
+          // showToast('try again');
+          alert('error Please Check');
+          return;
+        }
+        const {data} = response;
+        console.log('res', response.data);
 
-      // showToast(error.responses);
-    })
-    .finally(() => {
-      // setLoading(false);
-    });
-};
+        console.log('token', data.accessToken);
+        storeData(data);
+      })
+      .catch(error => {
+        console.log('error-->', error);
+
+        // showToast(error.responses);
+      })
+      .finally(() => {
+        // setLoading(false);
+      });
+  };
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
-
+  const storeData = async value => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem('@storage_Key', jsonValue);
+      handleNavigation('BottomStack');
+    } catch (e) {
+      // saving error
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -106,20 +128,24 @@ const handleLogin = () => {
             placeholder="Password"
             placeholderTextColor="gray"
             onChangeText={newText => setPassword(newText)}
-            secureTextEntry={true}
+            secureTextEntry={viewPass}
             style={styles.textInput}
           />
-          <Octicons name="eye-closed" size={20} color="gray" />
+          <TouchableOpacity onPress={() => setViewPass(!viewPass)}>
+            <Octicons name="eye-closed" size={20} color="gray" />
+          </TouchableOpacity>
         </View>
-        <View style={styles.savePwdRow}>
+        {/* <View style={styles.savePwdRow}>
           <Text style={styles.savePwdText}>Save Password</Text>
           <Switch
             trackColor={{false: appTheme.INACTIVE_COLOR, true: appTheme.COLOR2}}
             thumbColor="#fff"
             value={true}
           />
-        </View>
-        <TouchableOpacity style={styles.loginBtnWrapper}onPress={() => handleLogin()}>
+        </View> */}
+        <TouchableOpacity
+          style={styles.loginBtnWrapper}
+          onPress={() => handleLogin()}>
           <Text style={styles.loginBtnText}>LOGIN</Text>
         </TouchableOpacity>
         <TouchableOpacity
