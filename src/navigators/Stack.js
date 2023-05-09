@@ -18,7 +18,7 @@ import {
   Profile,
   Chat,
   Members,
-  Project,
+  Project,MembersTask,
 } from '../screens';
 import LocationPicker from '../components/Task/MapView/index';
 import appTheme from '../constants/colors';
@@ -74,6 +74,9 @@ function CustomTabBar(props) {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleNavigation('Members')}>
           <Feather name="send" size={25} color={getColor('Members')} />
+        </TouchableOpacity> 
+        <TouchableOpacity onPress={() => handleNavigation('MembersTask')}>
+        <Ionicons name="body-outline" size={32} color={getColor('MembersTask')} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleNavigation('Profile')}>
           <MaterialIcons
@@ -93,6 +96,7 @@ const BottomStack = () => {
       <BottomTab.Screen name="Dashboard" component={Dashboard} options={{}} />
       <BottomTab.Screen name="Projects" component={Projects} />
       <BottomTab.Screen name="Members" component={Members} />
+      <BottomTab.Screen name="MembersTask" component={MembersTask} />
       <BottomTab.Screen name="Profile" component={Profile} />
     </BottomTab.Navigator>
   );

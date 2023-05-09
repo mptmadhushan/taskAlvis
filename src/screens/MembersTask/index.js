@@ -1,10 +1,11 @@
-import React, {useState, useContext,useEffect} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   SafeAreaView,
   FlatList,
+  TextInput,
 } from 'react-native';
 import shortid from 'shortid';
 import styles from './projectsStyle';
@@ -16,8 +17,10 @@ import {
 } from '../../components';
 import {combineData} from '../../utils/DataHelper';
 import {getAllTask} from '../../api/getAllTask';
+import appTheme from '../../constants/colors';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-export function Members({navigation}) {
+export function MembersTask({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
 
   const {state, dispatch} = useContext(AuthContext);
@@ -52,20 +55,36 @@ export function Members({navigation}) {
     return value;
   };
 
-  const getProjects = () => {
-    let projectsToRender = task.filter((a)=>{if(a.isRepeat!==null){return a}});;
-    console.log("🚀 ~ file: index.js:57 ~ getProjects ~ projectsToRender:", projectsToRender)
+  const getProjects = (test) => {
+    console.log("🚀~ getProjects ~ test:", test)
+    if(test){
+     let projectsToRender=test
+      return projectsToRender;
+    }else{
+    var surname = 1;
+    let projectsToRender = task.filter(element =>
+      element.users.some(subElement => subElement.id === surname),
+    );
 
+    for (var data in projectsToRender) {
+      projectsToRender[data].subElements = {id: id};
+    }
     return projectsToRender;
-  };
+}
 
+  };
+  const toggleSearchField = (x) => {
+    console.log("🚀 toggleSearchField ~ x:", x,task)
+    let sam = task.filter((a)=>{if(a.title==x){return a}});
+    console.log("🚀 ~ file: index.js:79 ~ toggleSearchField ~ sam:", sam)
+    getProjects(sam)
+  };
   const renderProjectInfo = ({item}) => {
     return (
       <ProjectCard
         project={item}
         key={shortid.generate()}
         navigation={navigation}
-        isRep={true}
       />
     );
   };
@@ -73,10 +92,26 @@ export function Members({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
-        leftComponent={() => <Text style={styles.headerTitle}>Repeative Task</Text>}
+        leftComponent={() => (
+          <Text style={styles.headerTitle}>Friends Task</Text>
+        )}
         isSearchBtnVisible={false}
-        isMoreBtnVisible={false}
+        isMoreBtnVisible={true}
       />
+      {/* <View style={styles.searchInputWrapper}>
+        <TextInput
+          placeholder="Search"
+          style={styles.searchInputField}
+          onChange={ (text) => {
+            console.log(text.nativeEvent.text)
+            toggleSearchField(text.nativeEvent.text)
+               }
+            }
+         
+          placeholderTextColor={appTheme.INACTIVE_COLOR}
+        />
+
+      </View> */}
       <View style={styles.projectsBody}>
         {/* <View style={styles.projectsTabs}>
           {tabs?.map(tab => (
@@ -99,7 +134,7 @@ export function Members({navigation}) {
             </TouchableOpacity>
           ))}
         </View> */}
-        {projects?.length > 0 ? (
+        {task?.length > 0 ? (
           <FlatList
             data={getProjects()}
             keyExtractor={(item, index) => shortid.generate()}

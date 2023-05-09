@@ -38,7 +38,7 @@ export function CreateProject({}) {
     newProject: {title: '', description: '', selectedMembers: []},
   });
   const [dateNoti, setDateNoti] = useState(new Date());
-  const [location, setLocation] = useState(new Date());
+  const [location, setLocation] = useState('');
   const [checkboxState, setCheckboxState] = React.useState(false);
 
   // const setNotification = () => {
@@ -64,28 +64,28 @@ export function CreateProject({}) {
     console.log(payload);
     // setLoading(true);
 
-    // addTask(payload)
-    //   .then(response => {
-    //     if (response.error) {
-    //       console.log('error__<', response.error);
-    //       // showToast('try again');
-    //       alert('error Please Check');
-    //       return;
-    //     }
-    //     const {data} = response;
-    //     console.log('res', response.data);
+    addTask(payload)
+      .then(response => {
+        if (response.error) {
+          console.log('error__<', response.error);
+          // showToast('try again');
+          alert('error Please Check');
+          return;
+        }
+        const {data} = response;
+        console.log('res', response.data);
 
-    //     console.log('token', data.accessToken);
-    //     handleNavigation('BottomStack');
-    //   })
-    //   .catch(error => {
-    //     console.log('error-->', error);
+        console.log('token', data.accessToken);
+        handleNavigation('BottomStack');
+      })
+      .catch(error => {
+        console.log('error-->', error);
 
-    //     // showToast(error.responses);
-    //   })
-    //   .finally(() => {
-    //     // setLoading(false);
-    //   });
+        // showToast(error.responses);
+      })
+      .finally(() => {
+        // setLoading(false);
+      });
   };
   const showTimepicker = () => {
     showMode('time');
@@ -268,7 +268,7 @@ export function CreateProject({}) {
             onClose={() => onClose1()}>
             <View style={{paddingVertical: 10}}>
               <Button type="primary" onPress={onClose1}>
-                close
+                Select
               </Button>
               <LocationPicker chooseMessage={chooseMessage} />
             </View>
@@ -360,19 +360,12 @@ export function CreateProject({}) {
               </View>
             </ScrollView>
           </View>
-          <Button title="Display Notification" onPress={() => onDisplayNotification()} />
-          {/* <Button
-        title="Set notification after 5 seconds"
-        onPress={setNotification}
-      /> */}
-          {/* <Button  onPress={() => handleLocation('')} style={styles.btnWrapper}>
-        <Text style={styles.btnText}>Select Location</Text>
-      </Button> */}
-          {/* <TouchableOpacity  onPress={() => showDatePicker()} style={styles.btnWrapper}>
-        <Text style={styles.btnText}>Pick date</Text>
-      </TouchableOpacity> */}
+          <Button
+            onPress={() => handleBottomModal('')}
+            style={styles.btnWrapperErr}>
+            <Text style={styles.btnText}>Cancel</Text>
+          </Button>
 
-          {/* The date picker */}
         </ScrollView>
       </Provider>
     </View>

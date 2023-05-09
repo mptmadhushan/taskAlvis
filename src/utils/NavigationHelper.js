@@ -1,6 +1,6 @@
 export const getScreenParent = route => {
   let parent;
-  let bottomTabStack = ['Dashboard', 'Projects', 'Members', 'Profile',];
+  let bottomTabStack = ['Dashboard', 'Projects', 'Members', 'Profile','MembersTask'];
 
   let singleStack = [
     'Onboarding',

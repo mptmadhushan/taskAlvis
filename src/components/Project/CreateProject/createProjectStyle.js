@@ -42,6 +42,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
     borderRadius: 5,
+  },btnWrapperErr: {
+    marginTop: 'auto',
+    height: 45,
+    backgroundColor: appTheme.COLOR3,
+    width: '90%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    borderRadius: 5,
   },
   btnText: {
     color: '#fff',

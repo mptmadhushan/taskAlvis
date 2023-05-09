@@ -84,8 +84,8 @@ export function Dashboard() {
             />
           </View>
         )}
-        isSearchBtnVisible={true}
-        isMoreBtnVisible={true}
+        isSearchBtnVisible={false}
+        isMoreBtnVisible={false}
         taskData={task}
       />
       <View style={styles.contentBody}>

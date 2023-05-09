@@ -9,7 +9,8 @@ import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import {getScreenParent} from '../../../utils/NavigationHelper';
 let Image_Http_URL ={ uri: 'https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png'};
 
-export function ProjectCard({project, navigation}) {
+export function ProjectCard({isRep,project, navigation}) {
+  console.log("🚀 ~ file: index.js:13 ~ ProjectCard ~ project:", project)
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
@@ -24,19 +25,17 @@ export function ProjectCard({project, navigation}) {
           <Text style={styles.projectDescription}>{project?.description}</Text>
           <Text style={styles.projectTeamTitle}>Team</Text>
           <View style={styles.projectTeamWrapper}>
-            {/* {project?.team?.map(member => (
+            {project?.users?.map(member => (
               <Image
                 key={shortid.generate()}
                 style={styles.projectMemberPhoto}
                 source={Image_Http_URL}
               />
-            ))} */}
-            <TouchableOpacity style={styles.plusBtnContainer}>
-              <MaterialCommunityIcons name="plus" size={22} color="#fff" />
-            </TouchableOpacity>
+            ))}
+            
           </View>
         </View>
-        <ProgressCircle
+        {/* <ProgressCircle
           percent={project?.progress}
           radius={40}
           borderWidth={8}
@@ -44,7 +43,7 @@ export function ProjectCard({project, navigation}) {
           shadowColor="#f4f4f4"
           bgColor="#fff">
           <Text style={styles.projectProgress}>{project?.progress}%</Text>
-        </ProgressCircle>
+        </ProgressCircle> */}
       </View>
       <View style={styles.rowJustifyBetween}>
         <View style={styles.flexRow}>
@@ -53,16 +52,16 @@ export function ProjectCard({project, navigation}) {
             size={20}
             color={appTheme.INACTIVE_COLOR}
           />
-          <Text style={styles.projectBottomText}>{project?.createdAt}</Text>
+          {!isRep?<Text style={styles.projectBottomText}>{project?.createdAt}</Text>:<Text style={styles.projectBottomText}>Every {project?.isRepeat} days</Text>}
         </View>
-        <View style={styles.flexRow}>
+        {/* <View style={styles.flexRow}>
           <MaterialCommunityIcons
             name="checkbox-marked"
             size={20}
             color={appTheme.INACTIVE_COLOR}
           />
           <Text style={styles.projectBottomText}>{project?.tasks} Tasks</Text>
-        </View>
+        </View> */}
       </View>
     </TouchableOpacity>
   );

@@ -70,8 +70,8 @@ const LocationPicker = ({navigation,chooseMessage}) => {
       draggable
       onDragEnd={(e) => console.log(e.nativeEvent.coordinate)}
       coordinate={{ latitude: 28.579660, longitude: 77.321110 }}  
-      title={"JavaTpoint"}  
-      description={"Java Training Institute"}  
+      title={"pick"}  
+      description={"Select your location"}  
     />  
   </MapView>  
     
