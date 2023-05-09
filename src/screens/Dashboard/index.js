@@ -7,6 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import shortid from 'shortid';
+import PushNotification from 'react-native-push-notification';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
@@ -17,6 +18,7 @@ import {TabScreenHeader, TaskInfo, EmptyListComponent} from '../../components';
 import {formatCurrentDate} from '../../utils/DataHelper';
 import appTheme from '../../constants/colors';
 import {getAllTask} from '../../api/getAllTask';
+
 
 export function Dashboard() {
   const {state, dispatch} = useContext(AuthContext);
@@ -65,10 +67,20 @@ export function Dashboard() {
     .finally(() => {});
   }, []);
   const handleCreateTask = () => {
-    // dispatch({
-    //   type: 'toggleBottomModal',
-    //   payload: {bottomModal: 'CreateTask'},
-    // });
+    console.log(new Date(Date.now()));
+    PushNotification.localNotificationSchedule({
+      channelId: "channel-id", // (required) channelId, if the channel doesn't exist, notification will not trigger.
+      title: "Task 001", // (optional)
+
+      //... You can use all the options from localNotifications
+      message: "Non minim officia reprehenderit amet.", // (required)
+      date: new Date(Date.now() + 1 * 1000), // in 60 secs
+      allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
+    
+      /* Android Only Properties */
+      repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
+    });
+    
   };
 
   return (
@@ -160,14 +172,14 @@ export function Dashboard() {
         </View>
         <View style={styles.tasksSection}>
           <View style={styles.tasksHeader}>
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={styles.tasksRow}
               onPress={() => handleCreateTask()}>
-              <Text style={styles.tasksLeftText}>Add Task</Text>
+              <Text style={styles.tasksLeftText}>Test Notification</Text>
               <View style={styles.plusBtnContainer}>
                 <MaterialCommunityIcons name="plus" size={19} color="#fff" />
               </View>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
             <DropDownPicker
               placeholder="All Tasks"
               placeholderStyle={{fontSize: 15}}

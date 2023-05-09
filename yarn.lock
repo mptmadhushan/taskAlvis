@@ -1350,6 +1350,13 @@
   "resolved" "https://registry.npmjs.org/@react-native-community/masked-view/-/masked-view-0.1.11.tgz"
   "version" "0.1.11"
 
+"@react-native-community/push-notification-ios@^1.11.0":
+  "integrity" "sha512-nfkUs8P2FeydOCR4r7BNmtGxAxI22YuGP6RmqWt6c8EEMUpqvIhNKWkRSFF3pHjkgJk2tpRb9wQhbezsqTyBvA=="
+  "resolved" "https://registry.npmjs.org/@react-native-community/push-notification-ios/-/push-notification-ios-1.11.0.tgz"
+  "version" "1.11.0"
+  dependencies:
+    "invariant" "^2.2.4"
+
 "@react-native-community/segmented-control@^2.2.2":
   "integrity" "sha512-14+4HnGVrg3USqMzcHCPCqPmPmaEj0ogQH4pHRFXjoVvJokzidXBcYyXl5yrwFcKGW6zTXI6Fx9Qgt4ydtS6tw=="
   "resolved" "https://registry.npmjs.org/@react-native-community/segmented-control/-/segmented-control-2.2.2.tgz"
@@ -6310,6 +6317,11 @@
   "integrity" "sha512-VP0s92bgbTMQy4hQzPU4LlGyFj3z5u7i1HYFG8/yzXXfGkX1cxKS4xOlE+OTaObWC99w7Bodi3h8R7En2nQPYw=="
   "resolved" "https://registry.npmjs.org/react-native-progress-circle/-/react-native-progress-circle-2.1.0.tgz"
   "version" "2.1.0"
+
+"react-native-push-notification@^8.1.1":
+  "integrity" "sha512-XpBtG/w+a6WXTxu6l1dNYyTiHnbgnvjoc3KxPTxYkaIABRmvuJZkFxqruyGvfCw7ELAlZEAJO+dthdTabCe1XA=="
+  "resolved" "https://registry.npmjs.org/react-native-push-notification/-/react-native-push-notification-8.1.1.tgz"
+  "version" "8.1.1"
 
 "react-native-reanimated@^2.2.0":
   "integrity" "sha512-bjgKnTCGlE7vrHpyMe6q5MMU1I/PJmXqN+8nIDv1+RZcPbRic6Q/u6BQ84/AzZsDFVsNsebxIapo2TKUokAufg=="
