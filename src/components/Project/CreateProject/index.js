@@ -64,28 +64,28 @@ export function CreateProject({}) {
     console.log(payload);
     // setLoading(true);
 
-    addTask(payload)
-      .then(response => {
-        if (response.error) {
-          console.log('error__<', response.error);
-          // showToast('try again');
-          alert('error Please Check');
-          return;
-        }
-        const {data} = response;
-        console.log('res', response.data);
+    // addTask(payload)
+    //   .then(response => {
+    //     if (response.error) {
+    //       console.log('error__<', response.error);
+    //       // showToast('try again');
+    //       alert('error Please Check');
+    //       return;
+    //     }
+    //     const {data} = response;
+    //     console.log('res', response.data);
 
-        console.log('token', data.accessToken);
-        handleNavigation('BottomStack');
-      })
-      .catch(error => {
-        console.log('error-->', error);
+    //     console.log('token', data.accessToken);
+    //     handleNavigation('BottomStack');
+    //   })
+    //   .catch(error => {
+    //     console.log('error-->', error);
 
-        // showToast(error.responses);
-      })
-      .finally(() => {
-        // setLoading(false);
-      });
+    //     // showToast(error.responses);
+    //   })
+    //   .finally(() => {
+    //     // setLoading(false);
+    //   });
   };
   const showTimepicker = () => {
     showMode('time');
