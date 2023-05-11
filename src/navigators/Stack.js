@@ -18,7 +18,9 @@ import {
   Profile,
   Chat,
   Members,
-  Project,MembersTask,
+  Project,
+  MembersTask,
+  NearByTasks,
 } from '../screens';
 import LocationPicker from '../components/Task/MapView/index';
 import appTheme from '../constants/colors';
@@ -67,16 +69,28 @@ function CustomTabBar(props) {
             color={getColor('Projects')}
           />
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleNavigation('NearByTasks')}>
+          <Ionicons
+            name="ios-location"
+            size={25}
+            color={getColor('NearByTasks')}
+          />
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.plusBtnContainer}
           onPress={() => handleBottomModal('CreateProject')}>
           <MaterialCommunityIcons name="plus" size={25} color="#fff" />
         </TouchableOpacity>
+
         <TouchableOpacity onPress={() => handleNavigation('Members')}>
           <Feather name="send" size={25} color={getColor('Members')} />
-        </TouchableOpacity> 
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => handleNavigation('MembersTask')}>
-        <Ionicons name="body-outline" size={32} color={getColor('MembersTask')} />
+          <Ionicons
+            name="body-outline"
+            size={32}
+            color={getColor('MembersTask')}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleNavigation('Profile')}>
           <MaterialIcons
@@ -95,6 +109,7 @@ const BottomStack = () => {
     <BottomTab.Navigator tabBar={props => <CustomTabBar {...props} />}>
       <BottomTab.Screen name="Dashboard" component={Dashboard} options={{}} />
       <BottomTab.Screen name="Projects" component={Projects} />
+      <BottomTab.Screen name="NearByTasks" component={NearByTasks} />
       <BottomTab.Screen name="Members" component={Members} />
       <BottomTab.Screen name="MembersTask" component={MembersTask} />
       <BottomTab.Screen name="Profile" component={Profile} />
@@ -104,7 +119,7 @@ const BottomStack = () => {
 
 const SingleStack = () => {
   return (
-    <Stack.Navigator initialRouteName='Onboarding'>
+    <Stack.Navigator initialRouteName="Onboarding">
       <Stack.Screen
         name="Onboarding"
         component={Onboarding}
@@ -144,7 +159,7 @@ const SingleStack = () => {
         name="Tasks"
         component={Tasks}
         options={{headerShown: false}}
-      /> 
+      />
       <Stack.Screen
         name="LocationPicker"
         component={LocationPicker}
@@ -162,7 +177,6 @@ const SingleStack = () => {
 function AppStack() {
   return (
     <Stack.Navigator initialRouteName="BottomStack">
-      
       <Stack.Screen
         name="SingleStack"
         component={SingleStack}

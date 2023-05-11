@@ -70,7 +70,7 @@ export function CreateTask() {
         onChangeText={text => handleSetValue('title', text)}
       />
       <TextInput
-        placeholder="Descriptin"
+        placeholder="Description"
         placeholderTextColor="gray"
         style={styles.textInput}
         onChangeText={text => handleSetValue('description', text)}

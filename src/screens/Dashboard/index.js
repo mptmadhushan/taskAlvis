@@ -133,7 +133,7 @@ export function Dashboard() {
               />
               <View style={styles.statisticsCounter}>
                 <Text style={styles.statisticsValue}>{task.length}</Text>
-                <Text style={styles.statisticsTitle}>All Tasks</Text>
+                <Text style={styles.statisticsTitle}>Team Tasks</Text>
               </View>
             </View>
             <View
@@ -149,7 +149,7 @@ export function Dashboard() {
               />
               <View style={styles.statisticsCounter}>
                 <Text style={styles.statisticsValue}>{task.filter(task => task?.status === 'completed').length}</Text>
-                <Text style={styles.statisticsTitle}>Completed</Text>
+                <Text style={styles.statisticsTitle}>Repeating Tasks</Text>
               </View>
             </View>
             <View

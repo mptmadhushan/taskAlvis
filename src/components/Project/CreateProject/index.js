@@ -8,6 +8,7 @@ import {
   Platform,
   Image,
 } from 'react-native';
+import Toast from 'react-native-toast-message';
 import shortid from 'shortid';
 import styles from './createProjectStyle';
 import {combineData} from '../../../utils/DataHelper';
@@ -27,7 +28,6 @@ import {
   Provider,
   WingBlank,
   Modal,
-  Toast,
 } from '@ant-design/react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
@@ -37,72 +37,99 @@ export function CreateProject({}) {
   const [data, setData] = useState({
     newProject: {title: '', description: '', selectedMembers: []},
   });
-  const [dateNoti, setDateNoti] = useState(new Date());
   const [location, setLocation] = useState('');
+  const [locationName, setLocationName] = useState('');
   const [checkboxState, setCheckboxState] = React.useState(false);
-
-  // const setNotification = () => {
-  //   // Notifications.schduleNotification(date);
-  //   Notifications.schduleNotification(new Date(Date.now() + 5 * 1000));
-  // };
   const chooseMessage = message => {
     console.log('🚀 ~ file: index.js:40 ~ chooseMessage ~ message:', message);
+    const reverseGeocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=44.4647452,7.3553838&sensor=false&key=AIzaSyCwwyOJUiBpHmDwJRrtNh53fpRfaJnHVKQ`;
+  
+  // call Reverse Geocoding API - https://www.geoapify.com/reverse-geocoding-api/
+  fetch(reverseGeocodingUrl).then(result => result.json())
+    .then(featureCollection => {
+      console.log(featureCollection);
+      setLocationName(featureCollection.plus_code.compound_code)
+    });
     setLocation(message);
   };
 
   const handleAddTask = () => {
-    console.log(data);
     const payload = {
       title: data.newProject.title,
       description: data.newProject.description,
       date: date,
       location: JSON.stringify(location),
       status: 'ongoing',
-      isRepeat:checkboxState,
+      isRepeat: checkboxState,
       userId: 3,
     };
     console.log(payload);
-    // setLoading(true);
+    console.log(JSON.stringify(date));
+    if (location === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Please select location',
+      });
+    }
+    if (date === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Please select date & time',
+      });
+    }
+    if (data.newProject.description === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter task description',
+      });
+    }
+    if (data.newProject.title === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter task title',
+      });
+    } else {
+      const payload = {
+        title: data.newProject.title,
+        description: data.newProject.description,
+        date: date,
+        location: JSON.stringify(location),
+        status: 'ongoing',
+        isRepeat: checkboxState,
+        userId: 3,
+      };
+      console.log(payload);
+      // setLoading(true);
 
-    // addTask(payload)
-    //   .then(response => {
-    //     if (response.error) {
-    //       console.log('error__<', response.error);
-    //       // showToast('try again');
-    //       alert('error Please Check');
-    //       return;
-    //     }
-    //     const {data} = response;
-    //     console.log('res', response.data);
+      addTask(payload)
+        .then(response => {
+          if (response.error) {
+            console.log('error__<', response.error);
+            // showToast('try again');
+            alert('error Please Check');
+            return;
+          }
+          const {data} = response;
+          console.log('res', response.data);
 
-    //     console.log('token', data.accessToken);
-    //     handleNavigation('BottomStack');
-    //   })
-    //   .catch(error => {
-    //     console.log('error-->', error);
+          console.log('token', data.accessToken);
+          handleNavigation('BottomStack');
+        })
+        .catch(error => {
+          console.log('error-->', error);
 
-    //     // showToast(error.responses);
-    //   })
-    //   .finally(() => {
-    //     // setLoading(false);
-    //   });
+          // showToast(error.responses);
+        })
+        .finally(() => {
+          // setLoading(false);
+        });
+    }
   };
-  const showTimepicker = () => {
-    showMode('time');
-  };
+
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
-  const handleLocation = async () => {
-    await handleBottomModal('');
-    console.log('toggleBottomModal');
-    handleNavigation('LocationPicker');
-  };
 
-  const handleConfirm = date => {
-    console.warn('A date has been picked: ', date);
-    hideDatePicker();
-  };
   const handleBottomModal = bottomModal => {
     console.log(
       '🚀 ~ file: index.js:32 ~ handleBottomModal ~ bottomModal:',
@@ -112,7 +139,7 @@ export function CreateProject({}) {
       type: 'toggleBottomModal',
       payload: {bottomModal},
     });
-    handleAddTask();
+    // handleAddTask();
   };
   const handleSetValue = (field, value) => {
     console.log(
@@ -175,28 +202,27 @@ export function CreateProject({}) {
         // showToast(error.responses);
       })
       .finally(() => {});
-      getData();
+    getData();
   }, []);
   const [isPickerShow, setIsPickerShow] = useState(false);
   const [date, setDate] = useState('');
-  const [userData, setuserData] = useState(null)
+  const [userData, setuserData] = useState(null);
 
   const showPicker = () => {
     setIsPickerShow(true);
   };
   const getData = async () => {
     try {
-      const jsonValue = await AsyncStorage.getItem('@storage_Key')
-      setuserData(jsonValue)
+      const jsonValue = await AsyncStorage.getItem('@storage_Key');
+      setuserData(jsonValue);
       return jsonValue != null ? JSON.parse(jsonValue) : null;
-
-    } catch(e) {
+    } catch (e) {
       // error reading value
     }
-  }
+  };
   const onChange = value => {
-    console.log('🚀 ~ file: index.js:158 ~ onChange ~ value:', value);
-    setDate(value);
+    // const newDate=value.toLocaleString()
+    console.log(value);
     setDate(value);
   };
   const onClose1 = () => {
@@ -204,7 +230,7 @@ export function CreateProject({}) {
   };
   async function onDisplayNotification() {
     // Request permissions (required for iOS)
-    await notifee.requestPermission()
+    await notifee.requestPermission();
 
     // Create a channel (required for Android)
     const channelId = await notifee.createChannel({
@@ -228,11 +254,11 @@ export function CreateProject({}) {
   }
   return (
     <View style={styles.container}>
+      <Toast position="bottom" bottomOffset={50} />
       <Provider>
         <ScrollView>
           <Text style={styles.boldText}>Create Task</Text>
           <TextInput
-            width="200"
             placeholder="Title"
             placeholderTextColor="gray"
             style={styles.textInput}
@@ -250,27 +276,37 @@ export function CreateProject({}) {
             title="Please select"
             mode="datetime"
             defaultDate={new Date()}
-            minDate={new Date(2015, 7, 6)}
-            maxDate={new Date(2026, 11, 3)}
+            minDate={new Date()}
+            maxDate={new Date(2029, 11, 3)}
             onChange={onChange}
             format="YYYY-MM-DD HH-MM">
             <Button width="100%" style={styles.btnWrapper}>
-              <Text style={styles.btnText}>Select Date</Text>
+              <Text style={styles.btnText}>
+                {date ? `${date}` : 'Select Date & time'}
+              </Text>
             </Button>
           </DatePicker>
+
           <Button onPress={() => setVisible(true)} style={styles.btnWrapper}>
-            <Text style={styles.btnText}>Select Location</Text>
+            <Text style={styles.btnText}>
+              {location
+                ? `${locationName}`
+                : 'Select Location'}
+            </Text>
           </Button>
+         
           <Modal
             transparent={false}
             visible={visible1}
             animationType="slide-up"
             onClose={() => onClose1()}>
             <View style={{paddingVertical: 10}}>
+              <View style={{height:620}}>
+              <LocationPicker chooseMessage={chooseMessage} />
+              </View>
               <Button type="primary" onPress={onClose1}>
                 Select
               </Button>
-              <LocationPicker chooseMessage={chooseMessage} />
             </View>
           </Modal>
 
@@ -287,7 +323,7 @@ export function CreateProject({}) {
               isChecked={checkboxState}
               fillColor="#3E9AE3"
               unfillColor="#FFFFFF"
-              text="Is Repeative weekly"
+              text="Is Repetitive weekly"
               iconStyle={{borderColor: 'red'}}
               innerIconStyle={{borderWidth: 2}}
               textStyle={{fontFamily: 'JosefinSans-Regular'}}
@@ -295,9 +331,10 @@ export function CreateProject({}) {
             />
             <BouncyCheckbox
               size={25}
+              style={{marginTop: 5}}
               fillColor="#3E9AE3"
               unfillColor="#FFFFFF"
-              text="Is Repeative monthly"
+              text="Is Repetitive monthly"
               iconStyle={{borderColor: 'red'}}
               innerIconStyle={{borderWidth: 2}}
               textStyle={{fontFamily: 'JosefinSans-Regular'}}
@@ -308,7 +345,8 @@ export function CreateProject({}) {
               size={25}
               fillColor="#3E9AE3"
               unfillColor="#FFFFFF"
-              text="Is Repeative yearly"
+              style={{marginTop: 5}}
+              text="Is Reparative yearly"
               iconStyle={{borderColor: 'red'}}
               innerIconStyle={{borderWidth: 2}}
               textStyle={{fontFamily: 'JosefinSans-Regular'}}
@@ -316,9 +354,7 @@ export function CreateProject({}) {
               isChecked={checkboxState}
             />
           </WingBlank>
-          <Button
-            onPress={() => handleBottomModal('')}
-            style={styles.btnWrapper}>
+          <Button onPress={() => handleAddTask()} style={styles.btnWrapper}>
             <Text style={styles.btnText}>Create Task</Text>
           </Button>
 
@@ -365,7 +401,6 @@ export function CreateProject({}) {
             style={styles.btnWrapperErr}>
             <Text style={styles.btnText}>Cancel</Text>
           </Button>
-
         </ScrollView>
       </Provider>
     </View>

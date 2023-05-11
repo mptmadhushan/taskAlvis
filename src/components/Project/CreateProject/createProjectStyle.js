@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 40,
-    width: 200,
+    width: 217,
     borderRadius: 5,
     borderColor: appTheme.INACTIVE_COLOR,
     borderWidth: 1,
@@ -33,8 +33,6 @@ const styles = StyleSheet.create({
     paddingLeft: 7,
   },
   btnWrapper: {
-    marginTop: 'auto',
-    height: 45,
     backgroundColor: appTheme.PRIMARY_COLOR,
     width: '90%',
     display: 'flex',

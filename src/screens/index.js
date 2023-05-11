@@ -12,4 +12,5 @@ export * from './Chat';
 export * from './Members';
 export * from './Project';
 export * from './Tasks/';
+export * from './NearByTasks';
 

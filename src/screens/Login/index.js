@@ -16,6 +16,7 @@ import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import appTheme from '../../constants/colors';
 import {login} from '../../api/authAPI';
+import Toast from 'react-native-toast-message';
 
 export function Login({navigation}) {
   const [userName, setUserName] = useState('');
@@ -67,7 +68,10 @@ export function Login({navigation}) {
         if (response.error) {
           console.log('error__<', response.error);
           // showToast('try again');
-          alert('error Please Check');
+          Toast.show({
+            type: 'error',
+            text1: response.error.response.data.message,
+          });
           return;
         }
         const {data} = response;
@@ -77,8 +81,11 @@ export function Login({navigation}) {
         storeData(data);
       })
       .catch(error => {
-        console.log('error-->', error);
-
+        console.log('error-->', error.message);
+        Toast.show({
+          type: 'error',
+          text1: 'Please enter task description',
+        });
         // showToast(error.responses);
       })
       .finally(() => {
@@ -100,6 +107,7 @@ export function Login({navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
+       <Toast />
       <View>
         <TouchableOpacity
           style={styles.backButton}

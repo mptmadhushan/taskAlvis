@@ -17,6 +17,7 @@ import {getScreenParent} from '../../utils/NavigationHelper';
 import appTheme from '../../constants/colors';
 import { register } from '../../api/Register';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 
 export function SignUp({navigation}) {
@@ -57,7 +58,10 @@ export function SignUp({navigation}) {
         if (response.error) {
           console.log('error__<', response.error);
           // showToast('try again');
-          alert('error Please Check')
+          Toast.show({
+            type: 'error',
+            text1: response.error.response.data.message,
+          });
           return;
         }
         const {data} = response;
@@ -80,11 +84,13 @@ export function SignUp({navigation}) {
         await AsyncStorage.setItem('@storage_Key', jsonValue)
         handleNavigation('BottomStack')
       } catch (e) {
+        console.log("🚀 ~ file: index.js:86 ~ storeData ~ e:", e)
         // saving error
       }
     }
   return (
     <SafeAreaView style={styles.container}>
+       <Toast />
       <View>
         <TouchableOpacity
           style={styles.backButton}
