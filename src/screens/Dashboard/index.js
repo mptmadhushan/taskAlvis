@@ -57,7 +57,7 @@ export function Dashboard() {
       const {data} = response;
       console.log('res', data);
       setTasks(data)
-
+      handleCreateTask()
       // navigation.navigate('Home');
     })
     .catch(error => {
@@ -69,18 +69,20 @@ export function Dashboard() {
   const handleCreateTask = () => {
     console.log(new Date(Date.now()));
     console.log(new Date(Date.now() + 3 * 1000));
-    PushNotification.localNotificationSchedule({
-      channelId: "channel-id", // (required) channelId, if the channel doesn't exist, notification will not trigger.
-      title: "Task 001", // (optional)
-
-      //... You can use all the options from localNotifications
-      message: "Non minim officia reprehenderit amet.", // (required)
-      date: new Date(Date.now() + 3 * 1000), // in 60 secs
-      allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
+    tasks.map(item => 
+      PushNotification.localNotificationSchedule({
+        channelId: "channel-id", // (required) channelId, if the channel doesn't exist, notification will not trigger.
+        title: item.title, // (optional)
+  
+        //... You can use all the options from localNotifications
+        message:item.description, // (required)
+        date: item.date, // in 60 secs
+        allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
+      
+        /* Android Only Properties */
+        repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
+      }))
     
-      /* Android Only Properties */
-      repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
-    });
     
   };
 
