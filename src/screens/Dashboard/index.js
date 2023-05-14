@@ -68,13 +68,14 @@ export function Dashboard() {
   }, []);
   const handleCreateTask = () => {
     console.log(new Date(Date.now()));
+    console.log(new Date(Date.now() + 3 * 1000));
     PushNotification.localNotificationSchedule({
       channelId: "channel-id", // (required) channelId, if the channel doesn't exist, notification will not trigger.
       title: "Task 001", // (optional)
 
       //... You can use all the options from localNotifications
       message: "Non minim officia reprehenderit amet.", // (required)
-      date: new Date(Date.now() + 1 * 1000), // in 60 secs
+      date: new Date(Date.now() + 3 * 1000), // in 60 secs
       allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
     
       /* Android Only Properties */

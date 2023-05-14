@@ -26,11 +26,14 @@ export function ProjectCard({isRep,project, navigation}) {
           <Text style={styles.projectTeamTitle}>Team</Text>
           <View style={styles.projectTeamWrapper}>
             {project?.users?.map(member => (
-              <Image
+            <View>
+                <Image
                 key={shortid.generate()}
                 style={styles.projectMemberPhoto}
                 source={Image_Http_URL}
               />
+              <Text>{member.username}</Text>
+              </View>
             ))}
             
           </View>

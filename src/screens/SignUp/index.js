@@ -79,10 +79,11 @@ export function SignUp({navigation}) {
       });
     }
     const storeData = async (value) => {
+      console.log("🚀 ~ file: index.js:82 ~ storeData ~ value:", value)
       try {
         const jsonValue = JSON.stringify(value)
         await AsyncStorage.setItem('@storage_Key', jsonValue)
-        handleNavigation('BottomStack')
+        handleNavigation('Login')
       } catch (e) {
         console.log("🚀 ~ file: index.js:86 ~ storeData ~ e:", e)
         // saving error

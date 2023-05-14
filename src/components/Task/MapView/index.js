@@ -68,7 +68,7 @@ const LocationPicker = ({navigation,chooseMessage}) => {
 
     <Marker  
       draggable
-      onDragEnd={(e) => console.log(e.nativeEvent.coordinate)}
+      onDragEnd={(e) =>chooseMessage(e.nativeEvent.coordinate)}
       coordinate={{ latitude: 28.579660, longitude: 77.321110 }}  
       title={"pick"}  
       description={"Select your location"}  

@@ -96,6 +96,7 @@ export function Login({navigation}) {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
   const storeData = async value => {
+    console.log("🚀 ~ file: index.js:99 ~ storeData ~ value:", value)
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem('@storage_Key', jsonValue);

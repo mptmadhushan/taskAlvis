@@ -63,7 +63,7 @@ export function MembersTask({navigation}) {
     }else{
     var surname = 1;
     let projectsToRender = task.filter(element =>
-      element.users.some(subElement => subElement.id === surname),
+      element.users.some(subElement => subElement?.id === surname),
     );
 
     for (var data in projectsToRender) {

@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     backgroundColor: appTheme.PRIMARY_COLOR,
     paddingHorizontal: 25,
     borderRadius: 5,
+    marginTop:10,
     paddingVertical: 10,
   },
   editProfileText: {

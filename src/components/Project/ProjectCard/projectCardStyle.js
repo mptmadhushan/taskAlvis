@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   plusBtnContainer: {
     backgroundColor: appTheme.COLOR1,
     height: 40,
-    width: 40,
+    width: 0,
     borderRadius: 50,
     marginLeft: -10,
     display: 'flex',

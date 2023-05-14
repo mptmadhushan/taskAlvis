@@ -18,9 +18,11 @@ import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {getAllUsers} from '../../../api/getAllUsers';
 import {addTask} from '../../../api/addTask';
+import {addTaskUser} from '../../../api/addTaskUser';
 import LocationPicker from '../../../components/Task/MapView/index';
 import locale from '../../../../node_modules/@ant-design/react-native//es/date-picker/locale/en_US';
 // import Notifications from '../../../../src/utils/Notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   DatePicker,
@@ -40,31 +42,21 @@ export function CreateProject({}) {
   const [location, setLocation] = useState('');
   const [locationName, setLocationName] = useState('');
   const [checkboxState, setCheckboxState] = React.useState(false);
+
   const chooseMessage = message => {
     console.log('🚀 ~ file: index.js:40 ~ chooseMessage ~ message:', message);
-    const reverseGeocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=44.4647452,7.3553838&sensor=false&key=AIzaSyCwwyOJUiBpHmDwJRrtNh53fpRfaJnHVKQ`;
+    const reverseGeocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${message.lat},${message.lng}&sensor=false&key=AIzaSyCwwyOJUiBpHmDwJRrtNh53fpRfaJnHVKQ`;
   
   // call Reverse Geocoding API - https://www.geoapify.com/reverse-geocoding-api/
   fetch(reverseGeocodingUrl).then(result => result.json())
     .then(featureCollection => {
-      console.log(featureCollection);
       setLocationName(featureCollection.plus_code.compound_code)
     });
     setLocation(message);
   };
 
   const handleAddTask = () => {
-    const payload = {
-      title: data.newProject.title,
-      description: data.newProject.description,
-      date: date,
-      location: JSON.stringify(location),
-      status: 'ongoing',
-      isRepeat: checkboxState,
-      userId: 3,
-    };
-    console.log(payload);
-    console.log(JSON.stringify(date));
+   
     if (location === '') {
       Toast.show({
         type: 'error',
@@ -110,9 +102,17 @@ export function CreateProject({}) {
             return;
           }
           const {data} = response;
-          console.log('res', response.data);
-
-          console.log('token', data.accessToken);
+          console.log("🚀 ~ file: index.js:120 ~ handleAddTask ~ payload.userData:", userData)
+          const payload={
+            userId:userData.id,
+            taskId:response.data.task.id
+          }
+          Toast.show({
+            type: 'success',
+            text1: 'Task added..',
+          });
+          handleUser(payload)
+          getUsersData()
           handleNavigation('BottomStack');
         })
         .catch(error => {
@@ -123,18 +123,19 @@ export function CreateProject({}) {
         .finally(() => {
           // setLoading(false);
         });
+        
     }
   };
 
+  const handleUser = (payload) => {
+    console.log("🚀 ~ file: index.js:136 ~ handleUser ~ payload:", payload)
+  }
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
 
   const handleBottomModal = bottomModal => {
-    console.log(
-      '🚀 ~ file: index.js:32 ~ handleBottomModal ~ bottomModal:',
-      bottomModal,
-    );
+   
     dispatch({
       type: 'toggleBottomModal',
       payload: {bottomModal},
@@ -142,16 +143,9 @@ export function CreateProject({}) {
     // handleAddTask();
   };
   const handleSetValue = (field, value) => {
-    console.log(
-      '🚀 ~ file: index.js:90 ~ handleSetValue ~ field, value:',
-      field,
-      value,
-    );
+
     let {newProject} = data;
-    console.log(
-      '🚀 ~ file: index.js:92 ~ handleSetValue ~ newProject:',
-      newProject,
-    );
+ 
     if (field === 'selectedMembers') {
       let {selectedMembers} = newProject;
       const foundIndex = selectedMembers?.findIndex(a => a?.id === value?.id);
@@ -185,23 +179,7 @@ export function CreateProject({}) {
   const [visible1, setVisible] = useState(false);
 
   useEffect(() => {
-    getAllUsers()
-      .then(response => {
-        if (response.error) {
-          console.log('error__<', response.error);
-          return;
-        }
-        const {data} = response;
-        console.log('res', data);
-        setUsers(data);
-
-        // navigation.navigate('Home');
-      })
-      .catch(error => {
-        console.log('error-->', error);
-        // showToast(error.responses);
-      })
-      .finally(() => {});
+    
     getData();
   }, []);
   const [isPickerShow, setIsPickerShow] = useState(false);
@@ -211,10 +189,33 @@ export function CreateProject({}) {
   const showPicker = () => {
     setIsPickerShow(true);
   };
+  const getUsersData = async () => {
+    getAllUsers()
+    .then(response => {
+      if (response.error) {
+        console.log('error__<', response.error);
+        return;
+      }
+      const {data} = response;
+      const newArr=  data.filter((obj) => obj.id !== userData.id)
+      console.log("🚀 ~ file: index.js:201 ~ getUsersData ~ newArr:", newArr)
+      console.log('res', data);
+      setUsers(newArr);
+
+      // navigation.navigate('Home');
+    })
+    .catch(error => {
+      console.log('error-->', error);
+      // showToast(error.responses);
+    })
+    .finally(() => {});
+  }
   const getData = async () => {
+    console.log('get user data')
     try {
       const jsonValue = await AsyncStorage.getItem('@storage_Key');
-      setuserData(jsonValue);
+      setuserData(JSON.parse(jsonValue));
+      console.log("🚀 ~ file: index.js:228 ~ getData ~ JSON.parse(jsonValue):", JSON.parse(jsonValue))
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       // error reading value
@@ -222,7 +223,6 @@ export function CreateProject({}) {
   };
   const onChange = value => {
     // const newDate=value.toLocaleString()
-    console.log(value);
     setDate(value);
   };
   const onClose1 = () => {
@@ -262,6 +262,7 @@ export function CreateProject({}) {
             placeholder="Title"
             placeholderTextColor="gray"
             style={styles.textInput}
+            width={100}
             onChangeText={text => handleSetValue('title', text)}
           />
           <TextInput
@@ -358,9 +359,9 @@ export function CreateProject({}) {
             <Text style={styles.btnText}>Create Task</Text>
           </Button>
 
-          <View style={styles.teamTextWrapper}>
+          {users&&<View style={styles.teamTextWrapper}>
             <Text style={styles.teamText}>Select Members</Text>
-          </View>
+          </View>}
           <View style={styles.teamSection}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.teamWrapper}>
@@ -399,7 +400,7 @@ export function CreateProject({}) {
           <Button
             onPress={() => handleBottomModal('')}
             style={styles.btnWrapperErr}>
-            <Text style={styles.btnText}>Cancel</Text>
+            <Text style={styles.btnText}>close</Text>
           </Button>
         </ScrollView>
       </Provider>

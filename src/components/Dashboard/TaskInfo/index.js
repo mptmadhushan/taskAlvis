@@ -10,7 +10,6 @@ import {AuthContext} from '../../../context';
 let Image_Http_URL ={ uri: 'https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png'};
 
 export function TaskInfo({task}) {
-  console.log("🚀 askInfo  task:", task)
   const {state, dispatch} = useContext(AuthContext);
 
   const handleBottomModal = () => {

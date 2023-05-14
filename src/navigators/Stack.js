@@ -1,10 +1,12 @@
 import React, {useState, useContext} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet,Text, TouchableOpacity} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
+import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   Dashboard,
@@ -60,18 +62,18 @@ function CustomTabBar(props) {
     <View style={styles.menuWrapper}>
       <View style={styles.menuContainer}>
         <TouchableOpacity onPress={() => handleNavigation('Dashboard')}>
-          <Ionicons name="ios-menu" size={32} color={getColor('Dashboard')} />
+          <Entypo name="grid" size={32} color={getColor('Dashboard')} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleNavigation('Projects')}>
           <Ionicons
-            name="ios-document-text"
+            name="logo-buffer"
             size={25}
             color={getColor('Projects')}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleNavigation('NearByTasks')}>
-          <Ionicons
-            name="ios-location"
+          <Entypo
+            name="location"
             size={25}
             color={getColor('NearByTasks')}
           />
@@ -79,18 +81,16 @@ function CustomTabBar(props) {
         <TouchableOpacity
           style={styles.plusBtnContainer}
           onPress={() => handleBottomModal('CreateProject')}>
-          <MaterialCommunityIcons name="plus" size={25} color="#fff" />
+          {/* <MaterialCommunityIcons name="plus" size={25} color="#fff" /> */}
+          <Text style={{color:'white'}}>ADD TASK</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => handleNavigation('Members')}>
-          <Feather name="send" size={25} color={getColor('Members')} />
+          <FontAwesome name="repeat" size={25} color={getColor('Members')} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleNavigation('MembersTask')}>
-          <Ionicons
-            name="body-outline"
-            size={32}
-            color={getColor('MembersTask')}
-          />
+     
+          <Ionicons name="ios-people-outline" size={25} color={getColor('MembersTask')} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleNavigation('Profile')}>
           <MaterialIcons
@@ -218,8 +218,8 @@ const styles = StyleSheet.create({
   },
   plusBtnContainer: {
     backgroundColor: appTheme.PRIMARY_COLOR,
-    height: 60,
-    width: 60,
+    height: 40,
+    width: 120,
     borderRadius: 50,
     display: 'flex',
     flexDirection: 'row',
