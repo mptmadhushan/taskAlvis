@@ -61,9 +61,9 @@ export function MembersTask({navigation}) {
      let projectsToRender=test
       return projectsToRender;
     }else{
-    var surname = 1;
+    var userId = 1;
     let projectsToRender = task.filter(element =>
-      element.users.some(subElement => subElement?.id === surname),
+      element?.users.some(subElement => subElement?.id === userId),
     );
 
     for (var data in projectsToRender) {
@@ -134,7 +134,7 @@ export function MembersTask({navigation}) {
             </TouchableOpacity>
           ))}
         </View> */}
-        {task?.length > 0 ? (
+        {task?.length > 1 ? (
           <FlatList
             data={getProjects()}
             keyExtractor={(item, index) => shortid.generate()}
