@@ -24,7 +24,6 @@ import {getAllUsers} from '../../../api/getAllUsers';
 export function TaskView() {
   const {state, dispatch} = useContext(AuthContext);
   const {selectedTask} = state;
-  console.log("🚀 ~ file: index.js:27 ~ TaskView ~ selectedTask:", selectedTask)
   const [users, setUsers] = useState(null);
   const [checkboxState, setCheckboxState] = React.useState('');
   useEffect(() => {
@@ -59,7 +58,7 @@ export function TaskView() {
   return (
     <View style={styles.container}>
       <View style={styles.topWrapper}>
-        <View style={styles.taskProgressWrapper}>
+        {/* <View style={styles.taskProgressWrapper}>
           <ProgressCircle
             percent={selectedTask?.progress}
             radius={30}
@@ -69,7 +68,7 @@ export function TaskView() {
             bgColor="#fff">
             <Text style={styles.taskProgress}>{selectedTask?.progress}%</Text>
           </ProgressCircle>
-        </View>
+        </View> */}
         <Text style={styles.taskTitle}>{selectedTask?.title}</Text>
       </View>
       <Text style={styles.taskTeamText}>Team</Text>
@@ -87,10 +86,10 @@ export function TaskView() {
             </View>
         ))}
         <View>
-        <TouchableOpacity style={styles.plusBtnContainer}>
+        {/* <TouchableOpacity onPress={()=>handleBottomModal('')} style={styles.plusBtnContainer}>
           <MaterialCommunityIcons name="plus" size={22} color="#fff" />
           
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text style={styles.scheduleText}>add</Text>
 
         </View>
@@ -158,16 +157,11 @@ export function TaskView() {
       <Text style={styles.longText}>
       {selectedTask?.description}
       </Text>
-      <View style={styles.bottomWrapper}>
-        <TouchableOpacity  onPress={() => handleBottomModal('')} style={styles.bottomContent}>
-          <EvilIcons name="comment" size={25} color={appTheme.INACTIVE_COLOR} />
-          <Text style={styles.bottomText}>Update</Text>
-        </TouchableOpacity>
-        <TouchableOpacity  onPress={() => handleBottomModal('')} style={styles.bottomContent}>
-          <Ionicons name="attach" size={25} color={appTheme.INACTIVE_COLOR} />
-          <Text style={styles.bottomText}>Close</Text>
-        </TouchableOpacity>
-      </View>
+      <Button
+            onPress={() => handleBottomModal('')}
+            style={styles.btnWrapperErr}>
+            <Text style={styles.btnText}>close</Text>
+          </Button>
     </View>
   );
 }

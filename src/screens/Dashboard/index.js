@@ -18,6 +18,7 @@ import {TabScreenHeader, TaskInfo, EmptyListComponent} from '../../components';
 import {formatCurrentDate} from '../../utils/DataHelper';
 import appTheme from '../../constants/colors';
 import {getAllTask} from '../../api/getAllTask';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export function Dashboard() {
@@ -26,14 +27,26 @@ export function Dashboard() {
   const [open, setOpen] = useState(false);
   const [task, setTasks] = useState([]);
   const [value, setValue] = useState(null);
+  const [userData, setuserData] = useState(null);
   const [items, setItems] = useState([
     {label: 'All Tasks', value: 'All Tasks'},
     {label: 'Ongoing', value: 'Ongoing'},
     {label: 'Completed', value: 'Completed'},
   ]);
 
-
-  const getTasks = () => {
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@storage_Key');
+      setuserData(JSON.parse(jsonValue));
+      console.log(
+        JSON.parse(jsonValue),
+      );
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  };
+  const getTasks =  () => {
     let tasksToRender = task;
     if (!value || value === 'All Tasks') {
       console.log(task)
@@ -45,9 +58,15 @@ export function Dashboard() {
       tasksToRender =
       task.filter(task => task.status === 'completed') || [];;
     }
-    return tasksToRender;
+   
+  const tasksTo= tasksToRender.filter(element =>
+      element?.users.some(subElement => subElement?.id === userData?.id),
+    );
+    console.log("🚀 ~ file: index.js:65 ~ getTasks ~ tasksTo:", tasksTo)
+    return tasksTo;
   };
   useEffect(() => {
+    test()
     getAllTask()
     .then(response => {
       if (response.error) {
@@ -66,6 +85,11 @@ export function Dashboard() {
     })
     .finally(() => {});
   }, []);
+  const test=()=>{
+console.log('ss')
+getData()
+
+  }
   const handleCreateTask = () => {
     console.log(new Date(Date.now()));
     console.log(new Date(Date.now() + 3 * 1000));

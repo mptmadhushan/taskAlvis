@@ -114,8 +114,8 @@ export function NearByTasks  ({navigation}) {
     zoomEnabled={true}  
     zoomControlEnabled={true}  
     initialRegion={{  
-      latitude: 7.3315715,   
-      longitude: 80.7337262,  
+      latitude: task[0]?.lat,   
+      longitude: task[0]?.lng,  
       latitudeDelta: 0.0922,  
       longitudeDelta: 0.0421,  
     }}>  

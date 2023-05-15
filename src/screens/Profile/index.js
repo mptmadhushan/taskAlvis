@@ -74,7 +74,6 @@ export function Profile({navigation}) {
       });
   }
   const storeData = async value => {
-    console.log("🚀 ~ file: index.js:99 ~ storeData ~ value:", value)
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem('@storage_Key', jsonValue);

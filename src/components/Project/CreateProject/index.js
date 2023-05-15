@@ -18,7 +18,7 @@ import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {getAllUsers} from '../../../api/getAllUsers';
 import {addTask} from '../../../api/addTask';
-import {addTaskUser} from '../../../api/addTaskUser';
+import {addUserTask} from '../../../api/addTaskUser';
 import LocationPicker from '../../../components/Task/MapView/index';
 import locale from '../../../../node_modules/@ant-design/react-native//es/date-picker/locale/en_US';
 // import Notifications from '../../../../src/utils/Notifications';
@@ -44,19 +44,18 @@ export function CreateProject({}) {
   const [checkboxState, setCheckboxState] = React.useState(false);
 
   const chooseMessage = message => {
-    console.log('🚀 ~ file: index.js:40 ~ chooseMessage ~ message:', message);
     const reverseGeocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${message.lat},${message.lng}&sensor=false&key=AIzaSyCwwyOJUiBpHmDwJRrtNh53fpRfaJnHVKQ`;
-  
-  // call Reverse Geocoding API - https://www.geoapify.com/reverse-geocoding-api/
-  fetch(reverseGeocodingUrl).then(result => result.json())
-    .then(featureCollection => {
-      setLocationName(featureCollection.plus_code.compound_code)
-    });
+
+    // call Reverse Geocoding API - https://www.geoapify.com/reverse-geocoding-api/
+    fetch(reverseGeocodingUrl)
+      .then(result => result.json())
+      .then(featureCollection => {
+        setLocationName(featureCollection.plus_code.compound_code);
+      });
     setLocation(message);
   };
 
   const handleAddTask = () => {
-   
     if (location === '') {
       Toast.show({
         type: 'error',
@@ -101,18 +100,18 @@ export function CreateProject({}) {
             alert('error Please Check');
             return;
           }
-          const {data} = response;
-          console.log("🚀 ~ file: index.js:120 ~ handleAddTask ~ payload.userData:", userData)
-          const payload={
-            userId:userData.id,
-            taskId:response.data.task.id
-          }
+         
+          
+          const payload = {
+            userId: userData.id,
+            taskId: response.data.task.id,
+          };
           Toast.show({
             type: 'success',
             text1: 'Task added..',
           });
-          handleUser(payload)
-          getUsersData()
+          handleUser(payload);
+          getUsersData();
           handleNavigation('BottomStack');
         })
         .catch(error => {
@@ -123,19 +122,37 @@ export function CreateProject({}) {
         .finally(() => {
           // setLoading(false);
         });
-        
     }
   };
 
-  const handleUser = (payload) => {
-    console.log("🚀 ~ file: index.js:136 ~ handleUser ~ payload:", payload)
-  }
+  const handleUser = payload => {
+    addUserTask(payload)
+      .then(response => {
+        if (response.error) {
+          console.log('error__<', response.error);
+          // showToast('try again');
+          alert('error Please Check');
+          return;
+        }
+        console.log(
+          '🚀 ~ file: index.js:120 ~ handleAddTask ~ payload.userData:',
+          userData,
+        );
+      })
+      .catch(error => {
+        console.log('error-->', error);
+
+        // showToast(error.responses);
+      })
+      .finally(() => {
+        // setLoading(false);
+      });
+  };
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
 
   const handleBottomModal = bottomModal => {
-   
     dispatch({
       type: 'toggleBottomModal',
       payload: {bottomModal},
@@ -143,9 +160,8 @@ export function CreateProject({}) {
     // handleAddTask();
   };
   const handleSetValue = (field, value) => {
-
     let {newProject} = data;
- 
+
     if (field === 'selectedMembers') {
       let {selectedMembers} = newProject;
       const foundIndex = selectedMembers?.findIndex(a => a?.id === value?.id);
@@ -179,7 +195,6 @@ export function CreateProject({}) {
   const [visible1, setVisible] = useState(false);
 
   useEffect(() => {
-    
     getData();
   }, []);
   const [isPickerShow, setIsPickerShow] = useState(false);
@@ -191,31 +206,30 @@ export function CreateProject({}) {
   };
   const getUsersData = async () => {
     getAllUsers()
-    .then(response => {
-      if (response.error) {
-        console.log('error__<', response.error);
-        return;
-      }
-      const {data} = response;
-      const newArr=  data.filter((obj) => obj.id !== userData.id)
-      console.log("🚀 ~ file: index.js:201 ~ getUsersData ~ newArr:", newArr)
-      console.log('res', data);
-      setUsers(newArr);
+      .then(response => {
+        if (response.error) {
+          console.log('error__<', response.error);
+          return;
+        }
+        const {data} = response;
+        const newArr = data.filter(obj => obj.id !== userData.id);
+        console.log('res', data);
+        setUsers(newArr);
 
-      // navigation.navigate('Home');
-    })
-    .catch(error => {
-      console.log('error-->', error);
-      // showToast(error.responses);
-    })
-    .finally(() => {});
-  }
+        // navigation.navigate('Home');
+      })
+      .catch(error => {
+        console.log('error-->', error);
+        // showToast(error.responses);
+      })
+      .finally(() => {});
+  };
   const getData = async () => {
-    console.log('get user data')
+    console.log('get user data');
     try {
       const jsonValue = await AsyncStorage.getItem('@storage_Key');
       setuserData(JSON.parse(jsonValue));
-      console.log("🚀 ~ file: index.js:228 ~ getData ~ JSON.parse(jsonValue):", JSON.parse(jsonValue))
+
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       // error reading value
@@ -290,20 +304,18 @@ export function CreateProject({}) {
 
           <Button onPress={() => setVisible(true)} style={styles.btnWrapper}>
             <Text style={styles.btnText}>
-              {location
-                ? `${locationName}`
-                : 'Select Location'}
+              {location ? `${locationName}` : 'Select Location'}
             </Text>
           </Button>
-         
+
           <Modal
             transparent={false}
             visible={visible1}
             animationType="slide-up"
             onClose={() => onClose1()}>
             <View style={{paddingVertical: 10}}>
-              <View style={{height:620}}>
-              <LocationPicker chooseMessage={chooseMessage} />
+              <View style={{height: 620}}>
+                <LocationPicker chooseMessage={chooseMessage} />
               </View>
               <Button type="primary" onPress={onClose1}>
                 Select
@@ -359,9 +371,11 @@ export function CreateProject({}) {
             <Text style={styles.btnText}>Create Task</Text>
           </Button>
 
-          {users&&<View style={styles.teamTextWrapper}>
-            <Text style={styles.teamText}>Select Members</Text>
-          </View>}
+          {users && (
+            <View style={styles.teamTextWrapper}>
+              <Text style={styles.teamText}>Select Members</Text>
+            </View>
+          )}
           <View style={styles.teamSection}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.teamWrapper}>
