@@ -1,4 +1,4 @@
-import React, {useState, useContext,useEffect} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -22,45 +22,60 @@ export function Projects({navigation}) {
 
   const {state, dispatch} = useContext(AuthContext);
   const [task, setTasks] = useState([]);
+  const [userData, setuserData] = useState(null);
 
   const {projects} = state;
   useEffect(() => {
+    test();
     getAllTask()
-    .then(response => {
-      if (response.error) {
-        console.log('error__<', response.error);
-        return;
-      }
-      const {data} = response;
-      console.log('res', data);
-      setTasks(data)
+      .then(response => {
+        if (response.error) {
+          console.log('error__<', response.error);
+          return;
+        }
+        const {data} = response;
+        console.log('res', data);
+        setTasks(data);
 
-      // navigation.navigate('Home');
-    })
-    .catch(error => {
-      console.log('error-->', error);
-      // showToast(error.responses);
-    })
-    .finally(() => {});
+        // navigation.navigate('Home');
+      })
+      .catch(error => {
+        console.log('error-->', error);
+        // showToast(error.responses);
+      })
+      .finally(() => {});
   }, []);
-    const getTasks = () => {
-        let {activeTab} = data;
-     
+  const test = () => {
+    getData();
+  };
+  const getTasks = () => {
+    let {activeTab} = data;
+
     let tasksToRender = task;
     if (activeTab === 'All Tasks') {
-      console.log(task)
-      tasksToRender = task.filter(task => task.status === 'all tasks') || [];;
-    } else if ((activeTab === 'Ongoing')) {
-      tasksToRender =
-      task.filter(task => task.status === 'ongoing') || [];;
-    } else if ((activeTab === 'Completed')) {
-      tasksToRender =
-      task.filter(task => task.status === 'completed') || [];;
+      console.log(task);
+      tasksToRender = task.filter(task => task.status === 'all tasks') || [];
+    } else if (activeTab === 'Ongoing') {
+      tasksToRender = task.filter(task => task.status === 'ongoing') || [];
+    } else if (activeTab === 'Completed') {
+      tasksToRender = task.filter(task => task.status === 'completed') || [];
     }
-    return tasksToRender;
+    const tasksTo = tasksToRender.filter(element =>
+      element?.users.some(subElement => subElement?.id === userData?.id),
+    );
+    return tasksTo;
   };
   const [data, setData] = useState({activeTab: 'All'});
-
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@storage_Key');
+      setuserData(JSON.parse(jsonValue));
+      console.log(JSON.parse(jsonValue));
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  };
   const toggleTab = tab => {
     setData(combineData(data, {activeTab: tab}));
   };

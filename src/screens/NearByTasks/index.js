@@ -73,6 +73,9 @@ export function NearByTasks  ({navigation}) {
     });
     console.log(location);
   };
+  const markerTask =[{lat:7.2905715,lng:80.6337362},
+    {lat:7.2957725,lng:80.6307462},
+   ]
   useEffect(() => {
     getLocation()
     getAllTask()
@@ -84,7 +87,10 @@ export function NearByTasks  ({navigation}) {
       const {data} = response;
       let result = data.map(a => JSON.parse(a.location));
       console.log('res',result);
-      setTasks(result)
+      setTasks([{lat:7.2905715,lng:80.6337362},
+      {lat:7.2905725,lng:80.6337462},
+     ]
+      )
 
       // navigation.navigate('Home');
     })
@@ -114,12 +120,12 @@ export function NearByTasks  ({navigation}) {
     zoomEnabled={true}  
     zoomControlEnabled={true}  
     initialRegion={{  
-      latitude: task[0]?.lat,   
-      longitude: task[0]?.lng,  
+      latitude: 7.2905715,   
+      longitude: 80.6337262,  
       latitudeDelta: 0.0922,  
       longitudeDelta: 0.0421,  
     }}>  
- {task.map(marker => (
+ {markerTask.map(marker => (
     <Marker  
       draggable
       onDragEnd={(e) => console.log(e.nativeEvent.coordinate)}

@@ -62,7 +62,7 @@ export function CreateProject({}) {
         text1: 'Please select location',
       });
     }
-    if (date === '') {
+    if (dateNEW === '') {
       Toast.show({
         type: 'error',
         text1: 'Please select date & time',
@@ -83,7 +83,7 @@ export function CreateProject({}) {
       const payload = {
         title: data.newProject.title,
         description: data.newProject.description,
-        date: date,
+        date: dateNEW,
         location: JSON.stringify(location),
         status: 'ongoing',
         isRepeat: checkboxState,
@@ -198,7 +198,7 @@ export function CreateProject({}) {
     getData();
   }, []);
   const [isPickerShow, setIsPickerShow] = useState(false);
-  const [date, setDate] = useState('');
+  const [dateNEW, setDate] = useState('');
   const [userData, setuserData] = useState(null);
 
   const showPicker = () => {
@@ -236,6 +236,7 @@ export function CreateProject({}) {
     }
   };
   const onChange = value => {
+    console.log("🚀 ~ file: index.js:239 ~ onChange ~ value:", value)
     // const newDate=value.toLocaleString()
     setDate(value);
   };
@@ -286,18 +287,16 @@ export function CreateProject({}) {
             onChangeText={text => handleSetValue('description', text)}
           />
           <DatePicker
-            value={date}
             locale={locale}
             title="Please select"
             mode="datetime"
-            defaultDate={new Date()}
             minDate={new Date()}
             maxDate={new Date(2029, 11, 3)}
             onChange={onChange}
             format="YYYY-MM-DD HH-MM">
             <Button width="100%" style={styles.btnWrapper}>
               <Text style={styles.btnText}>
-                {date ? `${date}` : 'Select Date & time'}
+                {dateNEW ? `${dateNEW}` : 'Select Date & time'}
               </Text>
             </Button>
           </DatePicker>

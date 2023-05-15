@@ -1,4 +1,4 @@
-import React, {useContext, useState,useEffect} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -20,7 +20,6 @@ import appTheme from '../../constants/colors';
 import {getAllTask} from '../../api/getAllTask';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 export function Dashboard() {
   const {state, dispatch} = useContext(AuthContext);
   let {tasks} = state;
@@ -38,76 +37,68 @@ export function Dashboard() {
     try {
       const jsonValue = await AsyncStorage.getItem('@storage_Key');
       setuserData(JSON.parse(jsonValue));
-      console.log(
-        JSON.parse(jsonValue),
-      );
+      console.log(JSON.parse(jsonValue));
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       // error reading value
     }
   };
-  const getTasks =  () => {
+  const getTasks = () => {
     let tasksToRender = task;
     if (!value || value === 'All Tasks') {
-      console.log(task)
+      console.log(task);
       tasksToRender = task;
-    } else if ((value === 'Ongoing')) {
-      tasksToRender =
-      task.filter(task => task.status === 'ongoing') || [];;
-    } else if ((value === 'Completed')) {
-      tasksToRender =
-      task.filter(task => task.status === 'completed') || [];;
+    } else if (value === 'Ongoing') {
+      tasksToRender = task.filter(task => task.status === 'ongoing') || [];
+    } else if (value === 'Completed') {
+      tasksToRender = task.filter(task => task.status === 'completed') || [];
     }
-   
-  const tasksTo= tasksToRender.filter(element =>
+
+    const tasksTo = tasksToRender.filter(element =>
       element?.users.some(subElement => subElement?.id === userData?.id),
     );
-    console.log("🚀 ~ file: index.js:65 ~ getTasks ~ tasksTo:", tasksTo)
+    console.log('🚀 ~ file: index.js:65 ~ getTasks ~ tasksTo:', tasksTo);
     return tasksTo;
   };
   useEffect(() => {
-    test()
+    test();
     getAllTask()
-    .then(response => {
-      if (response.error) {
-        console.log('error__<', response.error);
-        return;
-      }
-      const {data} = response;
-      console.log('res', data);
-      setTasks(data)
-      handleCreateTask()
-      // navigation.navigate('Home');
-    })
-    .catch(error => {
-      console.log('error-->', error);
-      // showToast(error.responses);
-    })
-    .finally(() => {});
+      .then(response => {
+        if (response.error) {
+          console.log('error__<', response.error);
+          return;
+        }
+        const {data} = response;
+        console.log('res', data);
+        setTasks(data);
+        handleCreateTask();
+        // navigation.navigate('Home');
+      })
+      .catch(error => {
+        console.log('error-->', error);
+        // showToast(error.responses);
+      })
+      .finally(() => {});
   }, []);
-  const test=()=>{
-console.log('ss')
-getData()
-
-  }
+  const test = () => {
+    getData();
+  };
   const handleCreateTask = () => {
-    console.log(new Date(Date.now()));
-    console.log(new Date(Date.now() + 3 * 1000));
-    tasks.map(item => 
+    console.log('not',tasks)
+    tasks.map(item =>
       PushNotification.localNotificationSchedule({
-        channelId: "channel-id", // (required) channelId, if the channel doesn't exist, notification will not trigger.
+        channelId: 'channel-id', // (required) channelId, if the channel doesn't exist, notification will not trigger.
         title: item.title, // (optional)
-  
+
         //... You can use all the options from localNotifications
-        message:item.description, // (required)
+        message: item.description, // (required)
         date: item.date, // in 60 secs
         allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
-      
+
         /* Android Only Properties */
         repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
-      }))
-    
-    
+      }),
+    );
   };
 
   return (
@@ -143,7 +134,7 @@ getData()
                 style={styles.statisticsIcon}
               />
               <View style={styles.statisticsCounter}>
-                <Text style={styles.statisticsValue}>{task.filter(task => task?.status === 'ongoing').length}</Text>
+                <Text style={styles.statisticsValue}>2</Text>
                 <Text style={styles.statisticsTitle}>Ongoing</Text>
               </View>
             </View>
@@ -159,7 +150,7 @@ getData()
                 style={styles.statisticsIcon}
               />
               <View style={styles.statisticsCounter}>
-                <Text style={styles.statisticsValue}>{task.length}</Text>
+                <Text style={styles.statisticsValue}>1</Text>
                 <Text style={styles.statisticsTitle}>Team Tasks</Text>
               </View>
             </View>
@@ -175,7 +166,7 @@ getData()
                 style={styles.statisticsIcon}
               />
               <View style={styles.statisticsCounter}>
-                <Text style={styles.statisticsValue}>{task.filter(task => task?.status === 'completed').length}</Text>
+                <Text style={styles.statisticsValue}>1</Text>
                 <Text style={styles.statisticsTitle}>Repeating Tasks</Text>
               </View>
             </View>
@@ -191,7 +182,9 @@ getData()
                 style={styles.statisticsIcon}
               />
               <View style={styles.statisticsCounter}>
-                <Text style={styles.statisticsValue}>{task.filter(task => task?.status === 'canceled').length}</Text>
+                <Text style={styles.statisticsValue}>
+                  {task.filter(task => task?.status === 'canceled').length}
+                </Text>
                 <Text style={styles.statisticsTitle}>Cancelled</Text>
               </View>
             </View>
@@ -246,6 +239,5 @@ getData()
     </SafeAreaView>
   );
 }
-
 
 // https://stackoverflow.com/questions/65035612/sequelize-adduser-is-not-a-function

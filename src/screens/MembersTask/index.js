@@ -26,8 +26,10 @@ export function MembersTask({navigation}) {
   const {state, dispatch} = useContext(AuthContext);
   const {projects} = state;
   const [task, setTasks] = useState([]);
+  const [userData, setuserData] = useState(null);
   const [data, setData] = useState({activeTab: 'All'});
   useEffect(() => {
+    test();
     getAllTask()
       .then(response => {
         if (response.error) {
@@ -46,6 +48,19 @@ export function MembersTask({navigation}) {
       })
       .finally(() => {});
   }, []);
+  const test = () => {
+    getData();
+  };
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@storage_Key');
+      setuserData(JSON.parse(jsonValue));
+      console.log(JSON.parse(jsonValue));
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  };
   const toggleTab = tab => {
     setData(combineData(data, {activeTab: tab}));
   };
@@ -61,7 +76,7 @@ export function MembersTask({navigation}) {
      let projectsToRender=test
       return projectsToRender;
     }else{
-    var userId = 1;
+    var userId = userData?.id;
     let projectsToRender = task.filter(element =>
       element?.users.some(subElement => subElement?.id === userId),
     );
@@ -98,42 +113,9 @@ export function MembersTask({navigation}) {
         isSearchBtnVisible={false}
         isMoreBtnVisible={true}
       />
-      {/* <View style={styles.searchInputWrapper}>
-        <TextInput
-          placeholder="Search"
-          style={styles.searchInputField}
-          onChange={ (text) => {
-            console.log(text.nativeEvent.text)
-            toggleSearchField(text.nativeEvent.text)
-               }
-            }
-         
-          placeholderTextColor={appTheme.INACTIVE_COLOR}
-        />
-
-      </View> */}
+  
       <View style={styles.projectsBody}>
-        {/* <View style={styles.projectsTabs}>
-          {tabs?.map(tab => (
-            <TouchableOpacity
-              style={[
-                styles.projectTab,
-                isActiveTab(tab) ? styles.activeProjectTab : null,
-              ]}
-              onPress={() => toggleTab(tab)}
-              key={shortid.generate()}>
-              <Text
-                style={[
-                  styles.projectTabText,
-                  isActiveTab(tab)
-                    ? styles.activeProjectTabText
-                    : styles.inActiveProjectTabText,
-                ]}>
-                {tab}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View> */}
+       
         {task?.length > 1 ? (
           <FlatList
             data={getProjects()}
