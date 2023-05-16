@@ -85,10 +85,10 @@ export function Dashboard() {
     getData();
   };
   const handleCreateTask = (data) => {
-    task.map(item => console.log('not 📅 ', new Date(item.date)))
+    data.map(item => console.log('not 📅 ', new Date(item.date)))
    
     // console.log('not 🧮 ', data);
-    task.map(item =>
+    data.map(item =>
       PushNotification.localNotificationSchedule({
         channelId: 'channel-id', // (required) channelId, if the channel doesn't exist, notification will not trigger.
         title: item.title, // (optional)

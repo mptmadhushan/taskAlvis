@@ -1,4 +1,4 @@
-import React, {useState, useContext,useEffect} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import {
 } from '../../components';
 import {combineData} from '../../utils/DataHelper';
 import {getAllTask} from '../../api/getAllTask';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function Members({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
@@ -23,9 +24,24 @@ export function Members({navigation}) {
   const {state, dispatch} = useContext(AuthContext);
   const {projects} = state;
   const [task, setTasks] = useState([]);
+  const [userData, setuserData] = useState(null);
   const [data, setData] = useState({activeTab: 'All'});
-  useEffect(() => {
-    getAllTask()
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@storage_Key');
+      setuserData(JSON.parse(jsonValue));
+      console.log(JSON.parse(jsonValue));
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  };
+  const test = () => {
+    getData();
+  };
+  useEffect(async () => {
+    await test();
+    await getAllTask()
       .then(response => {
         if (response.error) {
           console.log('error__<', response.error);
@@ -53,10 +69,19 @@ export function Members({navigation}) {
   };
 
   const getProjects = () => {
-    let projectsToRender = task.filter((a)=>{if(a.isRepeat!==null){return a}});;
-    console.log("🚀 ~ file: index.js:57 ~ getProjects ~ projectsToRender:", projectsToRender)
-
-    return projectsToRender;
+    let projectsToRender = task.filter(a => {
+      if (a.isRepeat !== null) {
+        return a;
+      }
+    });
+    console.log(
+      '🚀 ~ file: index.js:57 ~ getProjects ~ projectsToRender:',
+      projectsToRender,
+    );
+    const tasksTo = projectsToRender.filter(element =>
+      element?.users.some(subElement => subElement?.id === userData?.id),
+    );
+    return tasksTo;
   };
 
   const renderProjectInfo = ({item}) => {
@@ -73,7 +98,9 @@ export function Members({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
-        leftComponent={() => <Text style={styles.headerTitle}>Repeative Task</Text>}
+        leftComponent={() => (
+          <Text style={styles.headerTitle}>Repeative Task</Text>
+        )}
         isSearchBtnVisible={false}
         isMoreBtnVisible={false}
       />
