@@ -57,21 +57,21 @@ export function Dashboard() {
     const tasksTo = tasksToRender.filter(element =>
       element?.users.some(subElement => subElement?.id === userData?.id),
     );
-    console.log('🚀 ~ file: index.js:65 ~ getTasks ~ tasksTo:', tasksTo);
-    return tasksTo;
+    return tasksTo.reverse();
   };
-  useEffect(() => {
+  useEffect(async() => {
     test();
-    getAllTask()
+   await getAllTask()
       .then(response => {
         if (response.error) {
           console.log('error__<', response.error);
           return;
         }
         const {data} = response;
-        console.log('res', data);
+
         setTasks(data);
-        handleCreateTask();
+        handleCreateTask(data);
+
         // navigation.navigate('Home');
       })
       .catch(error => {
@@ -79,22 +79,22 @@ export function Dashboard() {
         // showToast(error.responses);
       })
       .finally(() => {});
+
   }, []);
   const test = () => {
     getData();
   };
-  const handleCreateTask = () => {
-    console.log('not',tasks)
-    tasks.map(item =>
+  const handleCreateTask = (data) => {
+    task.map(item => console.log('not 📅 ', new Date(item.date)))
+   
+    // console.log('not 🧮 ', data);
+    task.map(item =>
       PushNotification.localNotificationSchedule({
         channelId: 'channel-id', // (required) channelId, if the channel doesn't exist, notification will not trigger.
-        title: 'task title', // (optional)
-
-        //... You can use all the options from localNotifications
-        message: 'task description', // (required)
-        date: new Date(Date.now() + 60 * 1000), // in 60 secs
+        title: item.title, // (optional)
+        message: item.description, // (required)
+        date: new Date(item.date), // in 60 secs
         allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
-
         /* Android Only Properties */
         repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
       }),

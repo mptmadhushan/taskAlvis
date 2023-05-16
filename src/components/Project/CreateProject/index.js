@@ -89,7 +89,7 @@ export function CreateProject({}) {
         isRepeat: checkboxState,
         userId: 3,
       };
-      console.log(payload);
+      console.log('payload',payload);
       // setLoading(true);
 
       addTask(payload)
@@ -238,7 +238,7 @@ export function CreateProject({}) {
   const onChange = value => {
     console.log("🚀 ~ file: index.js:239 ~ onChange ~ value:", value)
     // const newDate=value.toLocaleString()
-    setDate(value);
+    setDate(value.toString());
   };
   const onClose1 = () => {
     setVisible(false);
