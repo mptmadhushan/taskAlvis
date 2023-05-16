@@ -88,11 +88,11 @@ export function Dashboard() {
     tasks.map(item =>
       PushNotification.localNotificationSchedule({
         channelId: 'channel-id', // (required) channelId, if the channel doesn't exist, notification will not trigger.
-        title: item.title, // (optional)
+        title: 'task title', // (optional)
 
         //... You can use all the options from localNotifications
-        message: item.description, // (required)
-        date: item.date, // in 60 secs
+        message: 'task description', // (required)
+        date: new Date(Date.now() + 60 * 1000), // in 60 secs
         allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
 
         /* Android Only Properties */
@@ -195,7 +195,7 @@ export function Dashboard() {
             <TouchableOpacity
               style={styles.tasksRow}
               onPress={() => handleCreateTask()}>
-              <Text style={styles.tasksLeftText}>Test Notification</Text>
+              <Text style={styles.tasksLeftText}>Test</Text>
               <View style={styles.plusBtnContainer}>
                 <MaterialCommunityIcons name="plus" size={19} color="#fff" />
               </View>
