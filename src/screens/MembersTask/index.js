@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   FlatList,
-  TextInput,
 } from 'react-native';
 import shortid from 'shortid';
 import styles from './projectsStyle';
@@ -17,21 +16,19 @@ import {
 } from '../../components';
 import {combineData} from '../../utils/DataHelper';
 import {getAllTask} from '../../api/getAllTask';
-import appTheme from '../../constants/colors';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function MembersTask({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
 
   const {state, dispatch} = useContext(AuthContext);
-  const {projects} = state;
   const [task, setTasks] = useState([]);
   const [userData, setuserData] = useState(null);
-  const [data, setData] = useState({activeTab: 'All'});
-  useEffect(async () => {
-    await getData();
-    await getAllTask()
+
+  const {projects} = state;
+  useEffect(() => {
+    test();
+    getAllTask()
       .then(response => {
         if (response.error) {
           console.log('error__<', response.error);
@@ -49,15 +46,25 @@ export function MembersTask({navigation}) {
       })
       .finally(() => {});
   }, []);
+  const test = () => {
+    getData();
+  };
+  const getTasks = () => {
+    let tasksToRender = task;
+    const tasksTo2 = tasksToRender.filter(element =>
+      element?.users.some(subElement => subElement?.id === userData?.id),
+    );
+    console.log("🚀 ~ file: index.js:57 ~ getTasks ~ tasksTo2:", tasksTo2)
 
+       return tasksTo2;
+  };
+  const [data, setData] = useState({activeTab: 'All'});
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('@storage_Key');
-      console.log('🚀 ~ file: index.js:55 ~ getData ~ jsonValue:', jsonValue);
       setuserData(JSON.parse(jsonValue));
-      return 22;
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
-      console.log(e);
       // error reading value
     }
   };
@@ -70,15 +77,22 @@ export function MembersTask({navigation}) {
     return value;
   };
 
-  const getProjects = async () => {
-    const tasksTo = await task.filter(element =>
-      element?.users.some(subElement => subElement?.id === userData?.id),
-    );
-    console.log('🚀 ~ file: index.js:77 ~ getProjects ~ tasksTo:', tasksTo);
-    return tasksTo;
+  const getProjects = () => {
+    let {activeTab} = data;
+    let projectsToRender = [];
+    if (activeTab === 'All') {
+      projectsToRender = projects;
+    } else {
+      projectsToRender =
+        projects?.filter(
+          project => project.status === activeTab?.toLowerCase(),
+        ) || [];
+    }
+
+    return projectsToRender;
   };
+
   const renderProjectInfo = ({item}) => {
-    console.log('🚀 ~ file: index.js:81 ~ renderProjectInfo ~ item:', item);
     return (
       <ProjectCard
         project={item}
@@ -87,20 +101,39 @@ export function MembersTask({navigation}) {
       />
     );
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
-        leftComponent={() => (
-          <Text style={styles.headerTitle}>Friends Task</Text>
-        )}
-        isSearchBtnVisible={false}
+        leftComponent={() => <Text style={styles.headerTitle}>Friends Tasks</Text>}
+        isSearchBtnVisible={true}
         isMoreBtnVisible={true}
       />
-
       <View style={styles.projectsBody}>
-        {getProjects().length > 0 ? (
+        {/* <View style={styles.projectsTabs}>
+          {tabs?.map(tab => (
+            <TouchableOpacity
+              style={[
+                styles.projectTab,
+                isActiveTab(tab) ? styles.activeProjectTab : null,
+              ]}
+              onPress={() => toggleTab(tab)}
+              key={shortid.generate()}>
+              <Text
+                style={[
+                  styles.projectTabText,
+                  isActiveTab(tab)
+                    ? styles.activeProjectTabText
+                    : styles.inActiveProjectTabText,
+                ]}>
+                {tab}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View> */}
+        {task?.length > 0 ? (
           <FlatList
-            data={getProjects()}
+            data={getTasks()}
             keyExtractor={(item, index) => shortid.generate()}
             renderItem={renderProjectInfo}
             horizontal={false}
