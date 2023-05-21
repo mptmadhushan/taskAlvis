@@ -19,6 +19,7 @@ import {combineData} from '../../utils/DataHelper';
 import {getAllTask} from '../../api/getAllTask';
 import appTheme from '../../constants/colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function MembersTask({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
@@ -28,9 +29,9 @@ export function MembersTask({navigation}) {
   const [task, setTasks] = useState([]);
   const [userData, setuserData] = useState(null);
   const [data, setData] = useState({activeTab: 'All'});
-  useEffect(() => {
-    test();
-    getAllTask()
+  useEffect(async () => {
+    await getData();
+    await getAllTask()
       .then(response => {
         if (response.error) {
           console.log('error__<', response.error);
@@ -48,16 +49,15 @@ export function MembersTask({navigation}) {
       })
       .finally(() => {});
   }, []);
-  const test = () => {
-    getData();
-  };
+
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('@storage_Key');
+      console.log('🚀 ~ file: index.js:55 ~ getData ~ jsonValue:', jsonValue);
       setuserData(JSON.parse(jsonValue));
-      console.log(JSON.parse(jsonValue));
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
+      return 22;
     } catch (e) {
+      console.log(e);
       // error reading value
     }
   };
@@ -70,31 +70,15 @@ export function MembersTask({navigation}) {
     return value;
   };
 
-  const getProjects = (test) => {
-    console.log("🚀~ getProjects ~ test:", test)
-    if(test){
-     let projectsToRender=test
-      return projectsToRender;
-    }else{
-    var userId = userData?.id;
-    let projectsToRender = task.filter(element =>
-      element?.users.some(subElement => subElement?.id === userId),
+  const getProjects = async () => {
+    const tasksTo = await task.filter(element =>
+      element?.users.some(subElement => subElement?.id === userData?.id),
     );
-
-    for (var data in projectsToRender) {
-      projectsToRender[data].subElements = {id: id};
-    }
-    return projectsToRender;
-}
-
-  };
-  const toggleSearchField = (x) => {
-    console.log("🚀 toggleSearchField ~ x:", x,task)
-    let sam = task.filter((a)=>{if(a.title==x){return a}});
-    console.log("🚀 ~ file: index.js:79 ~ toggleSearchField ~ sam:", sam)
-    getProjects(sam)
+    console.log('🚀 ~ file: index.js:77 ~ getProjects ~ tasksTo:', tasksTo);
+    return tasksTo;
   };
   const renderProjectInfo = ({item}) => {
+    console.log('🚀 ~ file: index.js:81 ~ renderProjectInfo ~ item:', item);
     return (
       <ProjectCard
         project={item}
@@ -103,7 +87,6 @@ export function MembersTask({navigation}) {
       />
     );
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
@@ -113,10 +96,9 @@ export function MembersTask({navigation}) {
         isSearchBtnVisible={false}
         isMoreBtnVisible={true}
       />
-  
+
       <View style={styles.projectsBody}>
-       
-        {task?.length > 1 ? (
+        {getProjects().length > 0 ? (
           <FlatList
             data={getProjects()}
             keyExtractor={(item, index) => shortid.generate()}

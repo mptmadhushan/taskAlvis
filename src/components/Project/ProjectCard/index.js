@@ -10,6 +10,7 @@ import {getScreenParent} from '../../../utils/NavigationHelper';
 let Image_Http_URL ={ uri: 'https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png'};
 
 export function ProjectCard({isRep,project, navigation}) {
+  console.log("🚀 ~ file: index.js:13 ~ ProjectCard ~ project:", project)
   const handleNavigation = (screen, params) => {
     // navigateToNestedRoute(getScreenParent(screen), screen, params);
   };

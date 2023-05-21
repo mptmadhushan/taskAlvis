@@ -40,6 +40,7 @@ export function CreateProject({}) {
     newProject: {title: '', description: '', selectedMembers: []},
   });
   const [location, setLocation] = useState('');
+  const [newTaskId, setNewTaskId] = useState(null);
   const [locationName, setLocationName] = useState('');
   const [checkboxState, setCheckboxState] = React.useState(false);
 
@@ -87,9 +88,9 @@ export function CreateProject({}) {
         location: JSON.stringify(location),
         status: 'ongoing',
         isRepeat: checkboxState,
-        userId: 3,
+        userId: userData.id,
       };
-      console.log('payload',payload);
+      console.log('payload', payload);
       // setLoading(true);
 
       addTask(payload)
@@ -100,17 +101,12 @@ export function CreateProject({}) {
             alert('error Please Check');
             return;
           }
-         
-          
-          const payload = {
-            userId: userData.id,
-            taskId: response.data.task.id,
-          };
           Toast.show({
             type: 'success',
             text1: 'Task added..',
           });
-          handleUser(payload);
+          setNewTaskId(response.data.task.id);
+          // handleUser(payload);
           getUsersData();
           handleNavigation('BottomStack');
         })
@@ -125,7 +121,16 @@ export function CreateProject({}) {
     }
   };
 
-  const handleUser = payload => {
+  const handleUser = userId => {
+    console.log('id', newTaskId);
+    console.log(
+      '🚀 ~ file: index.js:130 ~ handleUser ~ tskId, userId:',
+      userId,
+    );
+    const payload = {
+      userId: userId.id,
+      taskId: newTaskId,
+    };
     addUserTask(payload)
       .then(response => {
         if (response.error) {
@@ -236,7 +241,7 @@ export function CreateProject({}) {
     }
   };
   const onChange = value => {
-    console.log("🚀 ~ file: index.js:239 ~ onChange ~ value:", value)
+    console.log('🚀 ~ file: index.js:239 ~ onChange ~ value:', value);
     // const newDate=value.toLocaleString()
     setDate(value.toString());
   };
@@ -387,7 +392,7 @@ export function CreateProject({}) {
                         ? styles.activeTeamWrapper
                         : null,
                     ]}
-                    onPress={() => handleSetValue('selectedMembers', member)}>
+                    onPress={() => handleUser(member)}>
                     <Image
                       style={styles.memberPhoto}
                       source={{

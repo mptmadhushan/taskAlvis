@@ -45,23 +45,35 @@ export function Dashboard() {
   };
   const getTasks = () => {
     let tasksToRender = task;
-    if (!value || value === 'All Tasks') {
-      console.log(task);
-      tasksToRender = task;
-    } else if (value === 'Ongoing') {
-      tasksToRender = task.filter(task => task.status === 'ongoing') || [];
-    } else if (value === 'Completed') {
-      tasksToRender = task.filter(task => task.status === 'completed') || [];
-    }
 
-    const tasksTo = tasksToRender.filter(element =>
-      element?.users.some(subElement => subElement?.id === userData?.id),
-    );
+    tasksTo =
+      tasksToRender.filter(task => parseInt(task.userId) === userData?.id) ||
+      [];
+
     return tasksTo.reverse();
   };
-  useEffect(async() => {
+  const getFriends = () => {
+    let tasksToRender = task;
+    const tasksTo2 = tasksToRender.filter(element =>
+      element?.users.some(subElement => subElement?.id === userData?.id),
+    );
+
+    return tasksTo2;
+  };
+  const getRepeating = () => {
+    let tasksToRender = task;
+    tasksTo =
+      tasksToRender.filter(task => parseInt(task.userId) === userData?.id) ||
+      [];
+    const tasksTo22 = tasksTo.filter(
+      task => parseInt(task.isRepeat) === 7 || [],
+    );
+    return tasksTo22;
+  };
+  useEffect(async () => {
     test();
-   await getAllTask()
+    getFriends();
+    await getAllTask()
       .then(response => {
         if (response.error) {
           console.log('error__<', response.error);
@@ -79,15 +91,11 @@ export function Dashboard() {
         // showToast(error.responses);
       })
       .finally(() => {});
-
   }, []);
   const test = () => {
     getData();
   };
-  const handleCreateTask = (data) => {
-    data.map(item => console.log('not 📅 ', new Date(item.date)))
-   
-    // console.log('not 🧮 ', data);
+  const handleCreateTask = data => {
     data.map(item =>
       PushNotification.localNotificationSchedule({
         channelId: 'channel-id', // (required) channelId, if the channel doesn't exist, notification will not trigger.
@@ -134,7 +142,7 @@ export function Dashboard() {
                 style={styles.statisticsIcon}
               />
               <View style={styles.statisticsCounter}>
-                <Text style={styles.statisticsValue}>2</Text>
+                <Text style={styles.statisticsValue}>{getTasks().length}</Text>
                 <Text style={styles.statisticsTitle}>Ongoing</Text>
               </View>
             </View>
@@ -150,7 +158,9 @@ export function Dashboard() {
                 style={styles.statisticsIcon}
               />
               <View style={styles.statisticsCounter}>
-                <Text style={styles.statisticsValue}>1</Text>
+                <Text style={styles.statisticsValue}>
+                  {getFriends().length}
+                </Text>
                 <Text style={styles.statisticsTitle}>Team Tasks</Text>
               </View>
             </View>
@@ -166,8 +176,10 @@ export function Dashboard() {
                 style={styles.statisticsIcon}
               />
               <View style={styles.statisticsCounter}>
-                <Text style={styles.statisticsValue}>1</Text>
-                <Text style={styles.statisticsTitle}>Repeating Tasks</Text>
+                <Text style={styles.statisticsValue}>
+                  {getRepeating().length}
+                </Text>
+                <Text style={styles.statisticsTitle}>Repeating tasks</Text>
               </View>
             </View>
             <View
@@ -192,14 +204,14 @@ export function Dashboard() {
         </View>
         <View style={styles.tasksSection}>
           <View style={styles.tasksHeader}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.tasksRow}
               onPress={() => handleCreateTask()}>
               <Text style={styles.tasksLeftText}>Test</Text>
               <View style={styles.plusBtnContainer}>
                 <MaterialCommunityIcons name="plus" size={19} color="#fff" />
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <DropDownPicker
               placeholder="All Tasks"
               placeholderStyle={{fontSize: 15}}

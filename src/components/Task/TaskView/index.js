@@ -1,4 +1,4 @@
-import React, {useContext,useEffect,useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import shortid from 'shortid';
 import ProgressCircle from 'react-native-progress-circle';
@@ -24,6 +24,10 @@ import {getAllUsers} from '../../../api/getAllUsers';
 export function TaskView() {
   const {state, dispatch} = useContext(AuthContext);
   const {selectedTask} = state;
+  console.log(
+    '🚀 ~ file: index.js:27 ~ TaskView ~ selectedTask:',
+    selectedTask,
+  );
   const [users, setUsers] = useState(null);
   const [checkboxState, setCheckboxState] = React.useState('');
   useEffect(() => {
@@ -46,10 +50,6 @@ export function TaskView() {
       .finally(() => {});
   }, []);
   const handleBottomModal = bottomModal => {
-    console.log(
-      '🚀 ~ file: index.js:32 ~ handleBottomModal ~ bottomModal:',
-      bottomModal,
-    );
     dispatch({
       type: 'toggleBottomModal',
       payload: {bottomModal},
@@ -76,92 +76,37 @@ export function TaskView() {
         {selectedTask?.users?.map(member => (
           <View>
             <Image
-            key={shortid.generate()}
-            style={styles.taskMemberPhoto}
-            source={{
-              uri: 'https://reactnative.dev/img/tiny_logo.png',
-            }}
-          />
-          <Text style={styles.scheduleText}>{member?.username}</Text>
-            </View>
+              key={shortid.generate()}
+              style={styles.taskMemberPhoto}
+              source={{
+                uri: 'https://reactnative.dev/img/tiny_logo.png',
+              }}
+            />
+            <Text style={styles.scheduleText}>{member?.username}</Text>
+          </View>
         ))}
         <View>
-        {/* <TouchableOpacity onPress={()=>handleBottomModal('')} style={styles.plusBtnContainer}>
-          <MaterialCommunityIcons name="plus" size={22} color="#fff" />
-          
-        </TouchableOpacity> */}
-        <Text style={styles.scheduleText}>add</Text>
-
         </View>
       </View>
-      <WingBlank
-            style={{
-              marginTop: 20,
-              marginBottom: 20,
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-            }}>
-            <BouncyCheckbox
-              size={25}
-              isChecked={selectedTask.isRepeat==='ongoing'}
-              fillColor="#3E9AE3"
-              unfillColor="#FFFFFF"
-              text="Ongoing"
-              iconStyle={{borderColor: 'red'}}
-              innerIconStyle={{borderWidth: 2}}
-              textStyle={{fontFamily: 'JosefinSans-Regular'}}
-              onPress={() => setCheckboxState('7')}
-            />
-            <BouncyCheckbox
-              size={25}
-              fillColor="#3E9AE3"
-              isChecked={selectedTask.isRepeat==='completed'}
-              unfillColor="#FFFFFF"
-              text="completed"
-              iconStyle={{borderColor: 'red'}}
-              innerIconStyle={{borderWidth: 2}}
-              textStyle={{fontFamily: 'JosefinSans-Regular'}}
-              onPress={() => setCheckboxState('30')}
-            />
-            <BouncyCheckbox
-              size={25}
-              fillColor="#3E9AE3"
-              unfillColor="#FFFFFF"
-              text="Is Repeative yearly"
-              isChecked={selectedTask.isRepeat==='canceled'}
-              iconStyle={{borderColor: 'red'}}
-              innerIconStyle={{borderWidth: 2}}
-              textStyle={{fontFamily: 'JosefinSans-Regular'}}
-              onPress={() => setCheckboxState('365')}
-            />
-          </WingBlank>
+
+        <Text>Task repeat every {selectedTask.isRepeat} days</Text>
       <View style={styles.scheduleWrapper}>
-        <View style={styles.scheduleRow}>
-          <MaterialCommunityIcons
-            name="clock"
-            size={20}
-            color={appTheme.INACTIVE_COLOR}
-          />
-          <Text style={styles.scheduleText}>1:30PM - 2:00PM</Text>
-        </View>
+        
         <View style={styles.scheduleRow}>
           <AntDesign
             name="calendar"
             size={20}
             color={appTheme.INACTIVE_COLOR}
           />
-          <Text style={styles.scheduleText}>June 13 2021</Text>
+          <Text style={styles.scheduleText}>{selectedTask.date}</Text>
         </View>
       </View>
-      <Text style={styles.longText}>
-      {selectedTask?.description}
-      </Text>
+      <Text style={styles.longText}>{selectedTask?.description}</Text>
       <Button
-            onPress={() => handleBottomModal('')}
-            style={styles.btnWrapperErr}>
-            <Text style={styles.btnText}>close</Text>
-          </Button>
+        onPress={() => handleBottomModal('')}
+        style={styles.btnWrapperErr}>
+        <Text style={styles.btnText}>close</Text>
+      </Button>
     </View>
   );
 }

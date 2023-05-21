@@ -19,11 +19,13 @@ let Image_Http_URL = {
 };
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {updateUser} from '../../api/updateUser';
+import {getAllTask} from '../../api/getAllTask';
 
 export function Profile({navigation}) {
   const {state, dispatch} = useContext(AuthContext);
   const {user} = state;
   const [userData, setuserData] = useState(null);
+  const [task, setTasks] = useState([]);
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const handleBackButton = () => {
@@ -33,15 +35,31 @@ export function Profile({navigation}) {
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
-  useEffect(() => {
-    getData();
+  useEffect(async () => {
+    await getData();
+    await getAllTask()
+      .then(response => {
+        if (response.error) {
+          console.log('error__<', response.error);
+          return;
+        }
+        const {data} = response;
+        console.log("🚀 ~ file: index.js:46 ~ useEffect ~ data:", data)
+
+        setTasks(data);
+      })
+      .catch(error => {
+        console.log('error-->', error);
+        // showToast(error.responses);
+      })
+      .finally(() => {});
   }, []);
   const update = async () => {
-    const payload={
-      id:userData.id,
-      username:userName,
-      email:email!==''? email:userData.email,
-    }
+    const payload = {
+      id: userData.id,
+      username: userName,
+      email: email !== '' ? email : userData.email,
+    };
     updateUser(payload)
       .then(response => {
         if (response.error) {
@@ -58,8 +76,7 @@ export function Profile({navigation}) {
 
         console.log('token', data.accessToken);
         // storeData(data);
-      // handleNavigation('Login');
-
+        // handleNavigation('Login');
       })
       .catch(error => {
         console.log('error-->', error.message);
@@ -72,7 +89,7 @@ export function Profile({navigation}) {
       .finally(() => {
         // setLoading(false);
       });
-  }
+  };
   const storeData = async value => {
     try {
       const jsonValue = JSON.stringify(value);
@@ -82,14 +99,30 @@ export function Profile({navigation}) {
       // saving error
     }
   };
+  const getFriends = () => {
+    let tasksToRender = task;
+    const tasksTo2 = tasksToRender.filter(element =>
+      element?.users.some(subElement => subElement?.id === userData?.id),
+    );
+
+    return tasksTo2;
+  };
+  const getRepeating = () => {
+    let tasksToRender = task;
+
+    tasksTo =
+      tasksToRender.filter(task => parseInt(task.userId) === userData?.id) ||
+      [];
+    const tasksTo22 = tasksTo.filter(
+      task => parseInt(task.isRepeat) === 7 || [],
+    );
+    return tasksTo22;
+  };
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('@storage_Key');
       setuserData(JSON.parse(jsonValue));
-      console.log(
-        '🚀 ~ file: index.js:41 ~ getData ~ JSON.parse(jsonValue):',
-        JSON.parse(jsonValue),
-      );
+
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       // error reading value
@@ -114,19 +147,23 @@ export function Profile({navigation}) {
           <View style={styles.profileDetailsSection}>
             <View style={styles.profileInfoSection}>
               <View style={styles.statisticsContainer}>
-                <Text style={styles.statisticsText}>135</Text>
-                <Text style={styles.statisticsTitle}>Completed Tasks</Text>
+                <Text style={styles.statisticsText}>
+                  {getRepeating().length}
+                </Text>
+                <Text style={styles.statisticsTitle}>Repeating Tasks</Text>
               </View>
               <Image
                 style={styles.profilePhoto}
                 source={Image_Http_URL}></Image>
               <View style={styles.statisticsContainer}>
-                <Text style={styles.statisticsText}>20</Text>
-                <Text style={styles.statisticsTitle}>Ongoing Tasks</Text>
+                <Text style={styles.statisticsText}>{getFriends().length}</Text>
+                <Text style={styles.statisticsTitle}>Friends Tasks</Text>
               </View>
             </View>
             <View style={styles.profileCenterSection}>
-              <Text style={styles.nameText}>{userName?userName:userData?.username}</Text>
+              <Text style={styles.nameText}>
+                {userName ? userName : userData?.username}
+              </Text>
               <Text style={styles.designationText}>{userData?.email}</Text>
               <TouchableOpacity
                 onPress={() => handleNavigation('Login')}

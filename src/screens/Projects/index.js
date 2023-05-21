@@ -16,6 +16,7 @@ import {
 } from '../../components';
 import {combineData} from '../../utils/DataHelper';
 import {getAllTask} from '../../api/getAllTask';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function Projects({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
@@ -49,28 +50,24 @@ export function Projects({navigation}) {
     getData();
   };
   const getTasks = () => {
-    let {activeTab} = data;
+    // let {activeTab} = data;
 
-    let tasksToRender = task;
-    if (activeTab === 'All Tasks') {
-      console.log(task);
-      tasksToRender = task.filter(task => task.status === 'all tasks') || [];
-    } else if (activeTab === 'Ongoing') {
-      tasksToRender = task.filter(task => task.status === 'ongoing') || [];
-    } else if (activeTab === 'Completed') {
-      tasksToRender = task.filter(task => task.status === 'completed') || [];
-    }
-    const tasksTo = tasksToRender.filter(element =>
-      element?.users.some(subElement => subElement?.id === userData?.id),
-    );
-    return tasksTo;
+    // let tasksToRender = task;
+    // if (activeTab === 'All Tasks') {
+    //   console.log(task);
+    //   tasksToRender = task.filter(task => task.status === 'all tasks') || [];
+    // } else if (activeTab === 'Ongoing') {
+    //   tasksToRender = task.filter(task => task.status === 'ongoing') || [];
+    // } else if (activeTab === 'Completed') {
+    //   tasksToRender = task.filter(task => task.status === 'completed') || [];
+    // }
+       return tasksTo;
   };
   const [data, setData] = useState({activeTab: 'All'});
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('@storage_Key');
       setuserData(JSON.parse(jsonValue));
-      console.log(JSON.parse(jsonValue));
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       // error reading value
@@ -118,7 +115,7 @@ export function Projects({navigation}) {
         isMoreBtnVisible={true}
       />
       <View style={styles.projectsBody}>
-        <View style={styles.projectsTabs}>
+        {/* <View style={styles.projectsTabs}>
           {tabs?.map(tab => (
             <TouchableOpacity
               style={[
@@ -138,7 +135,7 @@ export function Projects({navigation}) {
               </Text>
             </TouchableOpacity>
           ))}
-        </View>
+        </View> */}
         {task?.length > 0 ? (
           <FlatList
             data={getTasks()}
