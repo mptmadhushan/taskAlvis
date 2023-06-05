@@ -133,7 +133,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.project_management_mobile_app"
+        applicationId "com.maptask.taskmap"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

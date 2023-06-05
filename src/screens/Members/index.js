@@ -71,17 +71,14 @@ export function Members({navigation}) {
   const getProjects = () => {
     let projectsToRender = task.filter(a => {
       if (a.isRepeat !== null) {
-        return a;
+     
+        if (a.userId == userData?.id) {
+          return a;
+        }
       }
     });
-    console.log(
-      '🚀 ~ file: index.js:57 ~ getProjects ~ projectsToRender:',
-      projectsToRender,
-    );
-    const tasksTo = projectsToRender.filter(element =>
-      element?.users.some(subElement => subElement?.id === userData?.id),
-    );
-    return tasksTo;
+
+    return projectsToRender;
   };
 
   const renderProjectInfo = ({item}) => {
@@ -126,7 +123,7 @@ export function Members({navigation}) {
             </TouchableOpacity>
           ))}
         </View> */}
-        {projects?.length > 0 ? (
+        {task?.length > 0 ? (
           <FlatList
             data={getProjects()}
             keyExtractor={(item, index) => shortid.generate()}
